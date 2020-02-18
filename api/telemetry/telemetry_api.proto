@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package percona.platform.telemetry.v1beta1;
+
+option go_package = "telemetryv1beta1";
+
+import "github.com/mwitkow/go-proto-validators/validator.proto";
+import "telemetry/event.proto";
+
+// TelemetryAPI describes server API for reporting telemetry events.
+service TelemetryAPI {
+  // Report submits several telemetry events to the server.
+  rpc Report(ReportRequest) returns (ReportResponse);
+}
+
+message ReportRequest {
+  // One or more events to report.
+  repeated Event events = 1 [
+    (validator.field) = {
+      repeated_count_min: 1
+    }
+  ];
+}
+
+message ReportResponse {}

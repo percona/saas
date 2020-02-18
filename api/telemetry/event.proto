@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package percona.platform.telemetry.v1beta1;
+
+option go_package = "telemetryv1beta1";
+
+import "github.com/mwitkow/go-proto-validators/validator.proto";
+import "google/protobuf/timestamp.proto";
+
+// AnyEvent represents a serialized telemetry event from the events package.
+// It is similar to any.Any, but:
+// * is not a well-known type, so no special support from the library (it is a good thing in our case);
+// * may contain a JSON variant of serialization.
+message AnyEvent {
+  // A URL/resource name that uniquely identifies the type of the serialized
+  // protocol buffer message.
+  string type_url = 1 [
+    (validator.field) = {
+      regex: "^percona\\.telemetry\\.events\\.\\w+\\.v1beta1\\.\\w+Event$"
+    }
+  ];
+  // Must be a valid serialized protobuf binary of the above specified type.
+  // Only binary or json field must be set.
+  bytes binary = 2;
+  // Must be a valid serialized protobuf JSON of the above specified type.
+  // Only binary or json field must be set.
+  string json = 3;
+}
+
+// Event contains original event and additional information added by the sender.
+message Event {
+  // Event UUID.
+  bytes id = 1 [
+    (validator.field) = {
+      length_eq: 16
+    }
+  ];
+  // Time when this event was received by the sender.
+  google.protobuf.Timestamp time = 2 [
+    (validator.field) = {
+      msg_exists: true
+    }
+  ];
+  // Original event with a well-known type URL.
+  AnyEvent event = 3 [
+    (validator.field) = {
+      msg_exists: true
+    }
+  ];
+}

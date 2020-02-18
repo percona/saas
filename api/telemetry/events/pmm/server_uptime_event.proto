@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package percona.platform.telemetry.events.pmm.v1beta1;
+
+option go_package = "pmmv1beta1";
+
+import "github.com/mwitkow/go-proto-validators/validator.proto";
+import "google/protobuf/duration.proto";
+
+// DistributionMethod represents PMM Server distribution method.
+enum DistributionMethod {
+  // DISTRIBUTION_METHOD_INVALID represents unknown distribution method.
+  DISTRIBUTION_METHOD_INVALID = 0;
+  // DOCKER represents Docker distribution method.
+  DOCKER = 1;
+  // OVF represents Open Virtualization Format / Open Virtual Appliance distribution method.
+  OVF = 2;
+  // AMI represents Amazon Machine Image distribution method.
+  AMI = 3;
+}
+
+// ServerUptimeEvent contains basic information about PMM Server version,
+// uptime, and distribution method.
+message ServerUptimeEvent {
+  // PMM Server unique identifier.
+  bytes id = 1 [
+    (validator.field) = {
+      length_eq: 16
+    }
+  ];
+  // PMM Server version.
+  string version = 2 [
+    (validator.field) = {
+      length_gt: 4
+    }
+  ];
+  // PMM Server uptime.
+  google.protobuf.Duration up_duration = 3 [
+    (validator.field) = {
+      msg_exists: true
+    }
+  ];
+  // PMM Server distribution method.
+  DistributionMethod distribution_method = 4 [
+    (validator.field) = {
+      is_in_enum: true
+    }
+  ];
+}
