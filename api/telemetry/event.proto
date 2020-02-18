@@ -16,7 +16,7 @@ message AnyEvent {
   // protocol buffer message.
   string type_url = 1 [
     (validator.field) = {
-      regex: "^percona\\.telemetry\\.events\\.\\w+\\.v1beta1\\.\\w+Event$"
+      regex: "^percona\\.platform\\.telemetry\\.events\\.\\w+\\.v1beta1\\.\\w+Event$"
     }
   ];
   // Must be a valid serialized protobuf binary of the above specified type.
