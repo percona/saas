@@ -1,14 +1,14 @@
 syntax = "proto3";
 
-package percona.platform.telemetry.v1beta1;
+package percona.platform.telemetry.reporter.v1beta1;
 
-option go_package = "telemetryv1beta1";
+option go_package = "reporterv1beta1";
 
 import "github.com/mwitkow/go-proto-validators/validator.proto";
-import "telemetry/event.proto";
+import "telemetry/reporter/event.proto";
 
-// TelemetryAPI describes server API for reporting telemetry events.
-service TelemetryAPI {
+// ReporterAPI describes server API for reporting telemetry events.
+service ReporterAPI {
   // Report submits several telemetry events to the server.
   rpc Report(ReportRequest) returns (ReportResponse);
 }
