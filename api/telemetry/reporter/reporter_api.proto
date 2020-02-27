@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package percona.platform.telemetry.reporter.v1beta1;
+package percona.platform.telemetry.reporter.v1;
 
-option go_package = "reporterv1beta1";
+option go_package = "reporterv1";
 
 import "github.com/mwitkow/go-proto-validators/validator.proto";
 import "telemetry/reporter/event.proto";

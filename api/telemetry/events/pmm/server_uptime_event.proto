@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package percona.platform.telemetry.events.pmm.v1beta1;
+package percona.platform.telemetry.events.pmm.v1;
 
-option go_package = "pmmv1beta1";
+option go_package = "pmmv1";
 
 import "github.com/mwitkow/go-proto-validators/validator.proto";
 import "google/protobuf/duration.proto";
