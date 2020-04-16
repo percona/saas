@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package percona.platform.checked.v1beta1;
+
+option go_package = "checkedv1beta1";
+
+// CheckedAPI provides API to Percona Checks Service.
+service CheckedAPI {
+  // GetAllChecks returns all available checks.
+  rpc GetAllChecks(GetAllChecksRequest) returns (GetAllChecksResponse);
+}
+
+message GetAllChecksRequest {}
+
+message GetAllChecksResponse {
+  // YAML formatted checks.
+  string file = 1;
+  // Checks signatures.
+  repeated string signatures = 2;
+}
