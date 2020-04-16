@@ -57,8 +57,8 @@ func Verify(data []byte, publicKey, sig string) error {
 	return nil
 }
 
-// Parse returns slice of checks parsed from YAML passed via reader.
-// Can handle multi-document YAMLs, parsing result will be a single slice
+// Parse returns a slice of validated checks parsed from YAML passed via a reader.
+// It can handle multi-document YAMLs: parsing result will be a single slice
 // that contains checks form every parsed document.
 func Parse(reader io.Reader) ([]Check, error) {
 	d := yaml.NewDecoder(reader)
@@ -77,7 +77,12 @@ func Parse(reader io.Reader) ([]Check, error) {
 			return nil, errors.Wrap(err, "failed to parse checks")
 		}
 
-		res = append(res, c.Checks...)
+		for _, check := range c.Checks {
+			if err := check.validate(); err != nil {
+				return nil, err
+			}
+			res = append(res, check)
+		}
 	}
 }
 
@@ -101,8 +106,8 @@ type Check struct {
 	Script  string `yaml:"script"`
 }
 
-// Validate validates check for minimal correctness.
-func (c *Check) Validate() error {
+// validate validates check for minimal correctness.
+func (c *Check) validate() error {
 	if err := c.validateType(); err != nil {
 		return err
 	}
