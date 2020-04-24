@@ -109,7 +109,12 @@ func TestCheck_CheckValidate(t *testing.T) {
 		},
 		{
 			name:   "mongodb_get_parameter",
-			check:  &Check{Type: MongoDBGetParameter, Query: "\"saslHostName\" : 1", Script: "def func(args): pass"},
+			check:  &Check{Type: MongoDBGetParameter, Script: "def func(args): pass"},
+			errStr: "",
+		},
+		{
+			name:   "mongodb_build_info",
+			check:  &Check{Type: MongoDBBuildInfo, Script: "def func(args): pass"},
 			errStr: "",
 		},
 		{
@@ -131,6 +136,16 @@ func TestCheck_CheckValidate(t *testing.T) {
 			name:   "non_empty_query_for_postgresql_show",
 			check:  &Check{Type: PostgreSQLShow, Query: "VARIABLES WHERE Variable_name IN ('have_ssl', 'have_openssl');", Script: "def func(args): pass"},
 			errStr: "POSTGRESQL_SHOW check type should have empty query",
+		},
+		{
+			name:   "non_empty_query_for_mongodb_get_parameter",
+			check:  &Check{Type: MongoDBGetParameter, Query: "some query", Script: "def func(args): pass"},
+			errStr: "MONGODB_GETPARAMETER check type should have empty query",
+		},
+		{
+			name:   "non_empty_query_for_mongodb_build_info",
+			check:  &Check{Type: MongoDBBuildInfo, Query: "some query", Script: "def func(args): pass"},
+			errStr: "MONGODB_BUILDINFO check type should have empty query",
 		},
 		{
 			name:   "empty_script",
