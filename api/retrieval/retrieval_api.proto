@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-package percona.platform.checked.v1beta1;
+package percona.platform.check.retrieval.v1;
 
-option go_package = "checkedv1beta1";
+option go_package = "retrievalv1";
 
-// CheckedAPI provides API to Percona Checks Service.
-service CheckedAPI {
+// RetrievalAPI provides API for retrieving checks from Percona Check Service.
+service RetrievalAPI {
   // GetAllChecks returns all available checks.
   rpc GetAllChecks(GetAllChecksRequest) returns (GetAllChecksResponse);
 }
