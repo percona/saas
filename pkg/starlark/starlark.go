@@ -10,7 +10,7 @@ import (
 )
 
 // Run executes the script with given name and input data.
-func Run(name, script string, input []map[string]interface{}) (*check.Result, error) {
+func Run(name, script string, input []map[string]interface{}) ([]check.Result, error) {
 	thread := &starlark.Thread{
 		Name: name,
 	}
@@ -35,16 +35,7 @@ func Run(name, script string, input []map[string]interface{}) (*check.Result, er
 		return nil, errors.Wrap(err, "failed to execute check function")
 	}
 
-	switch v := v.(type) {
-	case *starlark.Dict:
-		// TODO https://jira.percona.com/browse/SAAS-84
-		return &check.Result{
-			Status:  "status",
-			Message: "message",
-		}, nil
-	default:
-		return nil, errors.Errorf("unhandled result type %T", v)
-	}
+	return parseScriptOutput(v)
 }
 
 func prepareRows(input []map[string]interface{}) (starlark.Tuple, error) {

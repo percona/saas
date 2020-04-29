@@ -26,7 +26,7 @@ func goToStarlark(v interface{}) (starlark.Value, error) {
 	case time.Time:
 		return starlark.MakeInt64(v.UnixNano()), nil
 	case []interface{}:
-		return goToStarlarkSlice(v)
+		return goToStarlarkList(v)
 	case map[string]interface{}:
 		return goToStarlarkDict(v)
 	case map[bool]struct{}:
@@ -44,7 +44,7 @@ func goToStarlark(v interface{}) (starlark.Value, error) {
 	}
 }
 
-func goToStarlarkSlice(v []interface{}) (starlark.Value, error) {
+func goToStarlarkList(v []interface{}) (starlark.Value, error) {
 	l := make([]starlark.Value, len(v))
 	for i, o := range v {
 		sv, err := goToStarlark(o)
@@ -53,7 +53,7 @@ func goToStarlarkSlice(v []interface{}) (starlark.Value, error) {
 		}
 		l[i] = sv
 	}
-	return starlark.Tuple(l), nil
+	return starlark.NewList(l), nil
 }
 
 func goToStarlarkDict(v map[string]interface{}) (starlark.Value, error) {
@@ -144,13 +144,23 @@ func starlarkToGo(v starlark.Value) (interface{}, error) {
 	case starlark.String:
 		return string(v), nil
 	case starlark.Tuple:
-		var res []interface{}
-		for _, o := range v {
+		res := make([]interface{}, len(v))
+		for i, o := range v {
 			no, err := starlarkToGo(o)
 			if err != nil {
 				return nil, err
 			}
-			res = append(res, no)
+			res[i] = no
+		}
+		return res, nil
+	case *starlark.List:
+		res := make([]interface{}, v.Len())
+		for i := 0; i < v.Len(); i++ {
+			no, err := starlarkToGo(v.Index(i))
+			if err != nil {
+				return nil, err
+			}
+			res[i] = no
 		}
 		return res, nil
 	case *starlark.Dict:
