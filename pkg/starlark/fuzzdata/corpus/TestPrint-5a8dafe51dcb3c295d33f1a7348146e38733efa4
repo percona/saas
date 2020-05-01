@@ -1,0 +1,1 @@
+{"s":"def test2():\n    print(\"hello from test2\")\n\ndef test1():\n    print(\"hello from test1\")\n    test2()\n\nprint(\"hello from main\")\n"}

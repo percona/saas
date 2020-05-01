@@ -1,0 +1,1 @@
+{"s":"def check(rows):\n    return [{\"summary\": repr(pairs(rows=rows)), \"severity\": \"notice\"}]\n"}

@@ -1,0 +1,1 @@
+{"s":"def check(rows):\n    return [{\"summary\": 1}]\n"}

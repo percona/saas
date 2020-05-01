@@ -1,0 +1,1 @@
+{"s":"def check(rows):\n    return [{\"labels\": {\"foo\": 1}}]\n"}
