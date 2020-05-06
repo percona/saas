@@ -61,6 +61,7 @@ func Verify(data []byte, publicKey, sig string) error {
 // ParseParams represents optional Parse function parameters.
 type ParseParams struct {
 	DisallowUnknownFields bool // if true, return errors for unexpected YAML fields
+	DisallowInvalidChecks bool // if true, return errors for invalid checks instead of skipping them
 }
 
 // Parse returns a slice of validated checks parsed from YAML passed via a reader.
@@ -90,8 +91,13 @@ func Parse(reader io.Reader, params *ParseParams) ([]Check, error) {
 
 		for _, check := range c.Checks {
 			if err := check.validate(); err != nil {
-				return nil, err
+				if params.DisallowInvalidChecks {
+					return nil, err
+				}
+
+				continue // skip invalid check
 			}
+
 			res = append(res, check)
 		}
 	}
