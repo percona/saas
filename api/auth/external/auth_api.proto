@@ -15,6 +15,8 @@ service AuthAPI {
   rpc SignIn(SignInRequest) returns (SignInResponse);
   // RefreshSession refreshes session timeout.
   rpc RefreshSession(RefreshSessionRequest) returns (RefreshSessionResponse);
+  // ResetPassword initiates user's password reset procedure.
+  rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
 }
 
 message SignUpRequest {
@@ -62,3 +64,14 @@ message RefreshSessionResponse {
   // Session expiration time.
   google.protobuf.Timestamp expire_time = 1;
 }
+
+message ResetPasswordRequest {
+  // User email.
+  string email = 1 [
+    (validator.field) = {
+      string_not_empty: true
+    }
+  ];
+}
+
+message ResetPasswordResponse {}
