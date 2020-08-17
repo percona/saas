@@ -18,14 +18,23 @@ func (g *GRPC) V(l int) bool {
 	return g.Verbose
 }
 
-func (g *GRPC) Infoln(args ...interface{})                  { g.Info(args...) }
-func (g *GRPC) Warning(args ...interface{})                 { g.Warn(args...) }
-func (g *GRPC) Warningln(args ...interface{})               { g.Warn(args...) }
-func (g *GRPC) Warningf(format string, args ...interface{}) { g.Warnf(format, args...) }
-func (g *GRPC) Errorln(args ...interface{})                 { g.Error(args...) }
-func (g *GRPC) Fatalln(args ...interface{})                 { g.Fatal(args...) }
+// Infoln prints log message with info level.
+func (g *GRPC) Infoln(args ...interface{}) { g.Info(args...) }
 
-// check interfaces
-var (
-	_ grpclog.LoggerV2 = (*GRPC)(nil)
-)
+// Warning prints log message with warning level.
+func (g *GRPC) Warning(args ...interface{}) { g.Warn(args...) }
+
+// Warningln similar to Warning.
+func (g *GRPC) Warningln(args ...interface{}) { g.Warn(args...) }
+
+// Warningf prints warning level log message wit given format.
+func (g *GRPC) Warningf(format string, args ...interface{}) { g.Warnf(format, args...) }
+
+// Errorln prints log message with error level.
+func (g *GRPC) Errorln(args ...interface{}) { g.Error(args...) }
+
+// Fatalln prints log message and exit program.
+func (g *GRPC) Fatalln(args ...interface{}) { g.Fatal(args...) }
+
+// Check interfaces.
+var _ grpclog.LoggerV2 = (*GRPC)(nil)
