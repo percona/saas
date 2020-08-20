@@ -13,6 +13,8 @@ service AuthAPI {
   rpc SignUp(SignUpRequest) returns (SignUpResponse);
   // SignIn checks user authentication, creates session and returns session ID.
   rpc SignIn(SignInRequest) returns (SignInResponse);
+  // SignOut terminates user session.
+  rpc SignOut(SignOutRequest) returns (SignOutResponse);
   // RefreshSession refreshes session timeout.
   rpc RefreshSession(RefreshSessionRequest) returns (RefreshSessionResponse);
   // ResetPassword initiates user's password reset procedure.
@@ -57,6 +59,10 @@ message SignInResponse {
   // Session expiration time.
   google.protobuf.Timestamp expire_time = 2;
 }
+
+message SignOutRequest {}
+
+message SignOutResponse {}
 
 message RefreshSessionRequest {}
 
