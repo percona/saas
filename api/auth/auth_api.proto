@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package percona.platform.auth.v1;
 
-option go_package = "authv1";
+option go_package = "auth;authv1";
 
 import "github.com/mwitkow/go-proto-validators/validator.proto";
 import "google/protobuf/timestamp.proto";

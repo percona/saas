@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package percona.platform.check.retrieval.v1;
 
-option go_package = "retrievalv1";
+option go_package = "check/retrieval;retrievalv1";
 
 // RetrievalAPI provides API for retrieving checks from Percona Check Service.
 service RetrievalAPI {
