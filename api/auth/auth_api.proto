@@ -69,6 +69,8 @@ message RefreshSessionRequest {}
 message RefreshSessionResponse {
   // Session expiration time.
   google.protobuf.Timestamp expire_time = 1;
+  // User email.
+  string email = 2;
 }
 
 message ResetPasswordRequest {
