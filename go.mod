@@ -5,10 +5,10 @@ go 1.14
 replace github.com/percona-platform/platform => ../should-not-exist
 
 require (
-	github.com/golang/protobuf v1.4.2
+	github.com/golang/protobuf v1.4.3
 	github.com/mwitkow/go-proto-validators v0.3.2
 	github.com/pkg/errors v0.9.1
-	github.com/prometheus/client_golang v1.7.1
+	github.com/prometheus/client_golang v1.8.0
 	go.starlark.net v0.0.0-20200901195727-6e684ef5eeee
 	go.uber.org/zap v1.16.0
 	google.golang.org/grpc v1.32.0
