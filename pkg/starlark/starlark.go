@@ -27,7 +27,7 @@ type Env struct {
 func NewEnv(name, script string, predeclaredFuncs map[string]GoFunc) (env *Env, err error) {
 	predeclared := make(starlark.StringDict, len(predeclaredFuncs))
 	for n, f := range predeclaredFuncs {
-		predeclared[n] = starlark.NewBuiltin(n, makeFunc(f))
+		predeclared[n] = starlark.NewBuiltin(n, MakeFunc(f))
 	}
 	predeclared.Freeze()
 
@@ -48,8 +48,8 @@ func NewEnv(name, script string, predeclaredFuncs map[string]GoFunc) (env *Env, 
 // starlarkFunc represent a Starlark builtin_function_or_method.
 type starlarkFunc func(*starlark.Thread, *starlark.Builtin, starlark.Tuple, []starlark.Tuple) (starlark.Value, error)
 
-// makeFunc converts GoFunc to starlarkFunc.
-func makeFunc(f GoFunc) starlarkFunc {
+// MakeFunc converts GoFunc to starlarkFunc.
+func MakeFunc(f GoFunc) starlarkFunc {
 	return func(_ *starlark.Thread, fn *starlark.Builtin, args starlark.Tuple, kwargs []starlark.Tuple) (starlark.Value, error) { //nolint:lll
 		if len(kwargs) != 0 {
 			return nil, errors.Errorf("%s: kwargs are not supported", fn.Name())
@@ -139,7 +139,7 @@ func (env *Env) Run(id string, input []map[string]interface{}, contextFuncs map[
 
 	context := starlark.NewDict(len(contextFuncs))
 	for n, f := range contextFuncs {
-		err = context.SetKey(starlark.String(n), starlark.NewBuiltin(n, makeFunc(f)))
+		err = context.SetKey(starlark.String(n), starlark.NewBuiltin(n, MakeFunc(f)))
 		if err != nil {
 			return nil, errors.Wrapf(err, "thread %s", id)
 		}
