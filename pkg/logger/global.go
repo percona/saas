@@ -1,8 +1,6 @@
 package logger
 
-import (
-	"go.uber.org/zap"
-)
+import "go.uber.org/zap"
 
 // FlagsParsed is used to catch the common service initialization problem.
 // Do not set the value directly in the service code.
