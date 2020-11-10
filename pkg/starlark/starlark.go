@@ -9,6 +9,7 @@ import (
 	"go.starlark.net/starlark"
 
 	"github.com/percona-platform/saas/pkg/check"
+	"github.com/percona-platform/saas/pkg/common"
 )
 
 // PrintFunc represents fmt.Println-like function that is used by Starlark 'print' function implementation.
@@ -259,7 +260,7 @@ func convertResult(m map[string]interface{}) (*check.Result, error) {
 	res := &check.Result{
 		Summary:     summary,
 		Description: description,
-		Severity:    check.ParseSeverity(severity),
+		Severity:    common.ParseSeverity(severity),
 		Labels:      labels,
 	}
 	if err = res.Validate(); err != nil {
