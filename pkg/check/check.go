@@ -145,12 +145,14 @@ func (t Type) Validate() error {
 
 // Check represents security check structure.
 type Check struct {
-	Version uint32        `yaml:"version"`
-	Name    string        `yaml:"name"`
-	Tiers   []common.Tier `yaml:"tiers,flow,omitempty"`
-	Type    Type          `yaml:"type"`
-	Query   string        `yaml:"query,omitempty"`
-	Script  string        `yaml:"script"`
+	Version     uint32        `yaml:"version"`
+	Name        string        `yaml:"name"`
+	Summary     string        `yaml:"summary"`
+	Description string        `yaml:"description"`
+	Tiers       []common.Tier `yaml:"tiers,flow,omitempty"`
+	Type        Type          `yaml:"type"`
+	Query       string        `yaml:"query,omitempty"`
+	Script      string        `yaml:"script"`
 }
 
 // the same as Prometheus label format
@@ -186,6 +188,14 @@ func (c *Check) Validate() error {
 
 	if c.Script == "" {
 		return errors.New("check script is empty")
+	}
+
+	if c.Summary == "" {
+		return errors.New("summary is empty")
+	}
+
+	if c.Description == "" {
+		return errors.New("description is empty")
 	}
 
 	return nil

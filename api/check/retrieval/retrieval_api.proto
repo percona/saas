@@ -4,10 +4,13 @@ package percona.platform.check.retrieval.v1;
 
 option go_package = "check/retrieval;retrievalv1";
 
-// RetrievalAPI provides API for retrieving checks from Percona Check Service.
+// RetrievalAPI provides API for retrieving Security Threat Tool checks
+// and Integrated Alerting rules from Percona Check Service.
 service RetrievalAPI {
-  // GetAllChecks returns all available checks.
+  // GetAllChecks returns all available STT checks.
   rpc GetAllChecks(GetAllChecksRequest) returns (GetAllChecksResponse);
+  // GetAllAlertRuleTemplates returns all available IA rule templates.
+  rpc GetAllAlertRuleTemplates(GetAllAlertRuleTemplatesRequest) returns (GetAllAlertRuleTemplatesResponse);
 }
 
 message GetAllChecksRequest {}
@@ -16,5 +19,14 @@ message GetAllChecksResponse {
   // YAML formatted checks.
   string file = 1;
   // Checks signatures.
+  repeated string signatures = 2;
+}
+
+message GetAllAlertRuleTemplatesRequest {}
+
+message GetAllAlertRuleTemplatesResponse {
+  // YAML formatted rules.
+  string file = 1;
+  // Rules signatures.
   repeated string signatures = 2;
 }
