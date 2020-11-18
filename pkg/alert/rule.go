@@ -58,16 +58,16 @@ func Parse(reader io.Reader, params *ParseParams) ([]Rule, error) {
 
 // Rule represents alert manager alerting rule.
 type Rule struct {
-	Name        string              `yaml:"name"`                 // required
-	Version     uint32              `yaml:"version"`              // required
-	Help        string              `yaml:"help"`                 // required
-	Tiers       []common.Tier       `yaml:"tiers,flow,omitempty"` // optional
-	Expr        string              `yaml:"expr"`                 // required
-	Params      []Parameter         `yaml:"params"`               // optional
-	For         promconfig.Duration `yaml:"for"`                  // required
-	Severity    common.Severity     `yaml:"severity"`             // required
-	Labels      map[string]string   `yaml:"labels"`               // optional
-	Annotations map[string]string   `yaml:"annotations"`          // optional
+	Name        string              `yaml:"name"`                  // required
+	Version     uint32              `yaml:"version"`               // required
+	Help        string              `yaml:"help"`                  // required
+	Tiers       []common.Tier       `yaml:"tiers,flow,omitempty"`  // optional
+	Expr        string              `yaml:"expr"`                  // required
+	Params      []Parameter         `yaml:"params,omitempty"`      // optional
+	For         promconfig.Duration `yaml:"for"`                   // required
+	Severity    common.Severity     `yaml:"severity"`              // required
+	Labels      map[string]string   `yaml:"labels,omitempty"`      // optional
+	Annotations map[string]string   `yaml:"annotations,omitempty"` // optional
 }
 
 // Validate validates rule.

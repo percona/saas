@@ -8,12 +8,12 @@ import (
 
 // Parameter represents alerting rule parameter.
 type Parameter struct {
-	Name  string        `yaml:"name"`  // required
-	Help  string        `yaml:"help"`  // required
-	Unit  string        `yaml:"unit"`  // required
-	Type  Type          `yaml:"type"`  // required
-	Range []interface{} `yaml:"range"` // required
-	Value interface{}   `yaml:"value"` // required
+	Name  string        `yaml:"name"`       // required
+	Help  string        `yaml:"help"`       // required
+	Unit  string        `yaml:"unit"`       // required
+	Type  Type          `yaml:"type"`       // required
+	Range []interface{} `yaml:"range,flow"` // required
+	Value interface{}   `yaml:"value"`      // required
 }
 
 // GetValueForFloat casts parameter value to the float64.
