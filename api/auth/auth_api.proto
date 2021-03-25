@@ -29,11 +29,11 @@ message SignUpRequest {
     }
   ];
   // User password.
-  string password = 2 [
-    (validator.field) = {
-      string_not_empty: true
-    }
-  ];
+  string password = 2 [deprecated = true];
+  // User first name.
+  string first_name = 3;
+  // User last name.
+  string last_name = 4;
 }
 
 message SignUpResponse {}
