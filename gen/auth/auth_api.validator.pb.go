@@ -81,3 +81,11 @@ func (this *ResetPasswordRequest) Validate() error {
 func (this *ResetPasswordResponse) Validate() error {
 	return nil
 }
+
+func (this *GetProfileRequest) Validate() error {
+	return nil
+}
+
+func (this *GetProfileResponse) Validate() error {
+	return nil
+}
