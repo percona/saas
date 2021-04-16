@@ -19,6 +19,8 @@ service AuthAPI {
   rpc RefreshSession(RefreshSessionRequest) returns (RefreshSessionResponse);
   // ResetPassword initiates user's password reset procedure.
   rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
+  // GetProfile returns user's email, first name and last name.
+  rpc GetProfile(GetProfileRequest) returns (GetProfileResponse);
 }
 
 message SignUpRequest {
@@ -83,3 +85,14 @@ message ResetPasswordRequest {
 }
 
 message ResetPasswordResponse {}
+
+message GetProfileRequest {}
+
+message GetProfileResponse {
+  // User email.
+  string email = 1;
+  // User first name.
+  string first_name = 2;
+  // User last name.
+  string last_name = 3;
+}
