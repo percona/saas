@@ -21,6 +21,8 @@ service AuthAPI {
   rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
   // GetProfile returns user's email, first name and last name.
   rpc GetProfile(GetProfileRequest) returns (GetProfileResponse);
+  // UpdateProfile updates user's first_name and last_name.
+  rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse);
 }
 
 message SignUpRequest {
@@ -96,3 +98,20 @@ message GetProfileResponse {
   // User last name.
   string last_name = 3;
 }
+
+message UpdateProfileRequest {
+  // User first name.
+  string first_name = 1 [
+    (validator.field) = {
+      string_not_empty: true
+    }
+  ];
+  // User last name.
+  string last_name = 2 [
+    (validator.field) = {
+      string_not_empty: true
+    }
+  ];
+}
+
+message UpdateProfileResponse {}
