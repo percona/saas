@@ -6,6 +6,7 @@ option go_package = "telemetry/events/pmm;pmmv1";
 
 import "github.com/mwitkow/go-proto-validators/validator.proto";
 import "google/protobuf/duration.proto";
+import "google/protobuf/wrappers.proto";
 
 // DistributionMethod represents PMM Server distribution method.
 enum DistributionMethod {
@@ -46,4 +47,8 @@ message ServerUptimeEvent {
       is_in_enum: true
     }
   ];
+  // PMM Server STT enabled.
+  google.protobuf.BoolValue stt_enabled = 5;
+  // PMM Server IA enabled.
+  google.protobuf.BoolValue ia_enabled = 6;
 }
