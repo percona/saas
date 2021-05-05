@@ -21,7 +21,7 @@ service AuthAPI {
   rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
   // GetProfile returns user's email, first name and last name.
   rpc GetProfile(GetProfileRequest) returns (GetProfileResponse);
-  // UpdateProfile updates user's first_name and last_name.
+  // UpdateProfile updates user's first name and last name.
   rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse);
 }
 

@@ -1111,7 +1111,7 @@ type AuthAPIClient interface {
 	ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordResponse, error)
 	// GetProfile returns user's email, first name and last name.
 	GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*GetProfileResponse, error)
-	// UpdateProfile updates user's first_name and last_name.
+	// UpdateProfile updates user's first name and last name.
 	UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...grpc.CallOption) (*UpdateProfileResponse, error)
 }
 
@@ -1200,7 +1200,7 @@ type AuthAPIServer interface {
 	ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordResponse, error)
 	// GetProfile returns user's email, first name and last name.
 	GetProfile(context.Context, *GetProfileRequest) (*GetProfileResponse, error)
-	// UpdateProfile updates user's first_name and last_name.
+	// UpdateProfile updates user's first name and last name.
 	UpdateProfile(context.Context, *UpdateProfileRequest) (*UpdateProfileResponse, error)
 }
 
