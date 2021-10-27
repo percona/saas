@@ -18,6 +18,10 @@ enum DistributionMethod {
   OVF = 2;
   // AMI represents Amazon Machine Image distribution method.
   AMI = 3;
+  // AZURE represents Azure distribution method.
+  AZURE = 4;
+  // DO represents Digital Ocean distribution method.
+  DO = 5;
 }
 
 // ServerUptimeEvent contains basic information about PMM Server version,
