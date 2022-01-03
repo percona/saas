@@ -36,7 +36,7 @@ func Parse(reader io.Reader, params *ParseParams) ([]Template, error) {
 	for {
 		var c templates
 		if err := d.Decode(&c); err != nil {
-			if err == io.EOF {
+			if errors.Is(err, io.EOF) {
 				return res, nil
 			}
 			return nil, errors.Wrap(err, "failed to parse templates")

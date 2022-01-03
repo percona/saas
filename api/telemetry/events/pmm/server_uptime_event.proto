@@ -2,9 +2,9 @@ syntax = "proto3";
 
 package percona.platform.telemetry.events.pmm.v1;
 
-option go_package = "telemetry/events/pmm;pmmv1";
+option go_package = "/telemetry/events/pmm;pmmv1";
 
-import "github.com/mwitkow/go-proto-validators/validator.proto";
+import "validator/validator.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/wrappers.proto";
 
@@ -18,6 +18,10 @@ enum DistributionMethod {
   OVF = 2;
   // AMI represents Amazon Machine Image distribution method.
   AMI = 3;
+  // AZURE represents Azure distribution method.
+  AZURE = 4;
+  // DO represents Digital Ocean distribution method.
+  DO = 5;
 }
 
 // ServerUptimeEvent contains basic information about PMM Server version,

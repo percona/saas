@@ -172,7 +172,7 @@ func (p *Parameter) validateRange() error {
 	return errors.Errorf("unknown parameter type: %s", p.Type)
 }
 
-func castValueToFloat64(v interface{}) (float64, error) {
+func castValueToFloat64(v interface{}) (float64, error) { //nolint: cyclop
 	switch v := v.(type) {
 	case nil:
 		return 0, errors.New("value is nil")
