@@ -11,8 +11,8 @@ import (
 //nolint:gochecknoglobals
 var key = struct{}{}
 
-// Get returns logger from given context produced by GetCtxWithLogger.
-func Get(ctx context.Context) *zap.Logger {
+// GetLoggerFromContext returns logger from given context produced by GetContextWithLogger.
+func GetLoggerFromContext(ctx context.Context) *zap.Logger {
 	v := ctx.Value(key)
 	if v == nil {
 		l := zap.L()
@@ -23,8 +23,8 @@ func Get(ctx context.Context) *zap.Logger {
 	return v.(*zap.Logger)
 }
 
-// GetCtxWithLogger returns derived context with given logger set.
+// GetContextWithLogger returns derived context with given logger set.
 // If logger is already present, it will be shadowed.
-func GetCtxWithLogger(ctx context.Context, l *zap.Logger) context.Context {
+func GetContextWithLogger(ctx context.Context, l *zap.Logger) context.Context {
 	return context.WithValue(ctx, key, l)
 }

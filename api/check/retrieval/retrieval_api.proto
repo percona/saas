@@ -2,15 +2,27 @@ syntax = "proto3";
 
 package percona.platform.check.retrieval.v1;
 
-option go_package = "check/retrieval;retrievalv1";
+option go_package = "github.com/percona-platform/saas/gen/check/retrieval;retrievalv1";
+
+import "google/api/annotations.proto";
 
 // RetrievalAPI provides API for retrieving Security Threat Tool checks
 // and Integrated Alerting rules from Percona Check Service.
 service RetrievalAPI {
   // GetAllChecks returns all available STT checks.
-  rpc GetAllChecks(GetAllChecksRequest) returns (GetAllChecksResponse);
+  rpc GetAllChecks(GetAllChecksRequest) returns (GetAllChecksResponse) {
+    option (google.api.http) = {
+      post: "/v1/check/GetAllChecks"
+      body: "*"
+    };
+  }
   // GetAllAlertRuleTemplates returns all available IA rule templates.
-  rpc GetAllAlertRuleTemplates(GetAllAlertRuleTemplatesRequest) returns (GetAllAlertRuleTemplatesResponse);
+  rpc GetAllAlertRuleTemplates(GetAllAlertRuleTemplatesRequest) returns (GetAllAlertRuleTemplatesResponse) {
+    option (google.api.http) = {
+      post: "/v1/check/GetAllAlertRuleTemplates"
+      body: "*"
+    };
+  }
 }
 
 message GetAllChecksRequest {}

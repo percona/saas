@@ -1,10 +1,14 @@
 package logger
 
-import "go.uber.org/zap"
+import (
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+)
 
 // FlagsParsed is used to catch the common service initialization problem.
 // Do not set the value directly in the service code.
 //
+// nolint:godox
 // TODO Can we do that better, without an exported global variable, dependency cycle,
 // and too much complexity of mutex-protected getters/setters?
 // https://jira.percona.com/browse/SAAS-275
@@ -12,8 +16,9 @@ var FlagsParsed bool //nolint:gochecknoglobals
 
 // SetupGlobalOpts contains logger options.
 type SetupGlobalOpts struct {
-	LogDebug   bool // enable debug level logging
-	LogDevMode bool // enable development mode logging: text instead of JSON, DPanic panics instead of logging errors
+	LogDebug   bool   // enable debug level logging
+	LogDevMode bool   // enable development mode logging: text instead of JSON, DPanic panics instead of logging errors
+	LogName    string // global logger name
 }
 
 // SetupGlobal setups global zap logger.
@@ -35,6 +40,8 @@ func SetupGlobal(opts *SetupGlobalOpts) {
 		OutputPaths:      []string{"stderr"},
 		ErrorOutputPaths: []string{"stderr"},
 	}
+	cfg.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+
 	if opts.LogDebug {
 		cfg.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
 	}
@@ -49,5 +56,5 @@ func SetupGlobal(opts *SetupGlobalOpts) {
 		panic(err)
 	}
 
-	zap.ReplaceGlobals(l)
+	zap.ReplaceGlobals(l.Named(opts.LogName))
 }

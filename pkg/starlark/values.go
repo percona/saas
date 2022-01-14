@@ -17,7 +17,7 @@ import (
 //  * time.Time -> int (UNIX timestamp in nanoseconds);
 //  * []interface{} -> list;
 //  * map[string]interface{} -> dict.
-func goToStarlark(v interface{}) (starlark.Value, error) {
+func goToStarlark(v interface{}) (starlark.Value, error) { //nolint: cyclop
 	switch v := v.(type) {
 	case nil:
 		return starlark.None, nil
@@ -82,10 +82,10 @@ func goToStarlark(v interface{}) (starlark.Value, error) {
 //  * tuple -> []interface{}
 //  * list -> []interface{}
 //  * dict (with string keys) -> map[string]interface{}.
-func starlarkToGo(v starlark.Value) (interface{}, error) { //nolint:funlen
+func starlarkToGo(v starlark.Value) (interface{}, error) { //nolint:funlen, cyclop
 	switch v := v.(type) {
 	case starlark.NoneType:
-		return nil, nil
+		return nil, nil //nolint:nilnil //intended
 
 	case starlark.Bool:
 		return bool(v), nil
