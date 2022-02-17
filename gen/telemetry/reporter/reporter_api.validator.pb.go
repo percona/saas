@@ -8,21 +8,20 @@ import (
 	math "math"
 
 	proto "github.com/golang/protobuf/proto"
-	_ "github.com/mwitkow/go-proto-validators"
 	github_com_mwitkow_go_proto_validators "github.com/mwitkow/go-proto-validators"
+	_ "google.golang.org/genproto/googleapis/api/annotations"
+	_ "google.golang.org/protobuf/types/known/durationpb"
+
+	_ "github.com/percona-platform/saas/gen/telemetry/events/pmm"
+	_ "github.com/percona-platform/saas/gen/validator"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
-var (
-	_ = proto.Marshal
-	_ = fmt.Errorf
-	_ = math.Inf
-)
+var _ = proto.Marshal
+var _ = fmt.Errorf
+var _ = math.Inf
 
 func (this *ReportRequest) Validate() error {
-	if len(this.Events) < 1 {
-		return github_com_mwitkow_go_proto_validators.FieldError("Events", fmt.Errorf(`value '%v' must contain at least 1 elements`, this.Events))
-	}
 	for _, item := range this.Events {
 		if item != nil {
 			if err := github_com_mwitkow_go_proto_validators.CallValidatorIfExists(item); err != nil {
@@ -30,9 +29,15 @@ func (this *ReportRequest) Validate() error {
 			}
 		}
 	}
+	for _, item := range this.Metrics {
+		if item != nil {
+			if err := github_com_mwitkow_go_proto_validators.CallValidatorIfExists(item); err != nil {
+				return github_com_mwitkow_go_proto_validators.FieldError("Metrics", err)
+			}
+		}
+	}
 	return nil
 }
-
 func (this *ReportResponse) Validate() error {
 	return nil
 }

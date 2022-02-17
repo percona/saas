@@ -14,7 +14,7 @@ type Severity int
 
 // Supported severity levels.
 const (
-	// Use the same values as PMM API: https://github.com/percona/pmm/blob/PMM-2.0/api/managementpb/severity.proto
+	// Use the same values as PMM API: https://github.com/percona/pmm/blob/main/api/managementpb/severity.proto
 	// That allows direct conversions without custom conversion function.
 
 	// Inline comments are for the go:generate stringer above.
