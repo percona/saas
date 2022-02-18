@@ -160,6 +160,32 @@ func (t Type) Validate() error { // nolint:cyclop
 	}
 }
 
+// Supported DB families.
+const (
+	MySQL      = Family("MYSQL")
+	PostgreSQL = Family("POSTGRESQL")
+	MongoDB    = Family("MONGODB")
+)
+
+// Family represents monitored service family.
+type Family string
+
+// Validate validates check family.
+func (f Family) Validate() error {
+	switch f {
+	case MySQL:
+		fallthrough
+	case PostgreSQL:
+		fallthrough
+	case MongoDB:
+		return nil
+	case "":
+		return errors.New("check family is empty")
+	default:
+		return errors.Errorf("unknown check family: %s", f)
+	}
+}
+
 // Supported check intervals.
 const (
 	Standard = Interval("standard")
@@ -186,16 +212,24 @@ func (i Interval) Validate() error {
 	}
 }
 
-// Check represents security check structure.
+// Query represents DB query of specified type.
+type Query struct {
+	Query string
+	Type  Type
+}
+
+// Check represents security check structure. Fields marked with v1 should not be used for version 2, and vice versa.
 type Check struct {
 	Version     uint32        `yaml:"version"`
 	Name        string        `yaml:"name"`
 	Summary     string        `yaml:"summary"`
 	Description string        `yaml:"description"`
-	Type        Type          `yaml:"type"`
+	Type        Type          `yaml:"type,omitempty"`   // for v1
+	Family      Family        `yaml:"family,omitempty"` // for v2
 	Tiers       []common.Tier `yaml:"tiers,flow,omitempty"`
 	Interval    Interval      `yaml:"interval,omitempty"`
-	Query       string        `yaml:"query,omitempty"`
+	Query       string        `yaml:"query,omitempty"`   // for v1
+	Queries     []Query       `yaml:"queries,omitempty"` // for v2
 	Script      string        `yaml:"script"`
 }
 
@@ -205,9 +239,6 @@ var nameRE = regexp.MustCompile(`^[a-zA-Z_][a-zA-Z0-9_]*$`)
 // Validate validates check for minimal correctness.
 func (c *Check) Validate() error { //nolint: cyclop
 	var err error
-	if c.Version != 1 {
-		return errors.Errorf("unexpected version %d", c.Version)
-	}
 
 	if !nameRE.MatchString(c.Name) {
 		return errors.New("invalid check name")
@@ -218,14 +249,6 @@ func (c *Check) Validate() error { //nolint: cyclop
 	}
 
 	if err = c.Interval.Validate(); err != nil {
-		return err
-	}
-
-	if err = c.Type.Validate(); err != nil {
-		return err
-	}
-
-	if err = c.validateQuery(); err != nil {
 		return err
 	}
 
@@ -245,6 +268,55 @@ func (c *Check) Validate() error { //nolint: cyclop
 		return errors.New("description is empty")
 	}
 
+	switch c.Version {
+	case 1:
+		return c.validateV1()
+	case 2:
+		return c.validateV2()
+	default:
+		return errors.Errorf("unexpected version %d", c.Version)
+	}
+}
+
+func (c *Check) validateV1() error {
+	var err error
+	if err = c.Type.Validate(); err != nil {
+		return err
+	}
+
+	if err = validateQuery(c.Type, c.Query); err != nil {
+		return err
+	}
+
+	if c.Family != "" {
+		return errors.New("field 'family' is part of check format version 2 and can't be used in version 1")
+	}
+
+	if len(c.Queries) != 0 {
+		return errors.New("field 'queries' is part of check format version 2 and can't be used in version 1")
+	}
+
+	return nil
+}
+
+func (c *Check) validateV2() error {
+	var err error
+	if err = c.Family.Validate(); err != nil {
+		return err
+	}
+
+	if err = c.validateQueries(); err != nil {
+		return err
+	}
+
+	if c.Type != "" {
+		return errors.New("field 'type' is part of check format version 1 and can't be used in version 2")
+	}
+
+	if c.Query != "" {
+		return errors.New("field 'query' is part of check format version 1 and can't be used in version 2")
+	}
+
 	return nil
 }
 
@@ -256,8 +328,8 @@ func (c *Check) validateScript() error {
 	return nil
 }
 
-func (c *Check) validateQuery() error { // nolint:cyclop
-	switch c.Type {
+func validateQuery(typ Type, query string) error { // nolint:cyclop
+	switch typ {
 	case PostgreSQLShow:
 		fallthrough
 	case MongoDBGetParameter:
@@ -269,16 +341,100 @@ func (c *Check) validateQuery() error { // nolint:cyclop
 	case MongoDBReplSetGetStatus:
 		fallthrough
 	case MongoDBGetDiagnosticData:
-		if c.Query != "" {
-			return errors.Errorf("%s check type should have empty query", c.Type)
+		if query != "" {
+			return errors.Errorf("query should be empty for %s type", typ)
 		}
 	case PostgreSQLSelect:
 		fallthrough
 	case MySQLShow:
 		fallthrough
 	case MySQLSelect:
-		if c.Query == "" {
-			return errors.New("check query is empty")
+		if query == "" {
+			return errors.New("query is empty")
+		}
+	}
+
+	return nil
+}
+
+func (c *Check) validateQueries() error {
+	if len(c.Queries) == 0 {
+		return errors.New("check should have at least one query")
+	}
+
+	switch c.Family {
+	case MySQL:
+		return validateMySQLCompatibleQueries(c.Queries)
+	case PostgreSQL:
+		return validatePostgreSQLCompatibleQueries(c.Queries)
+	case MongoDB:
+		return validateMongoDBCompatibleQueries(c.Queries)
+	default:
+		return errors.Errorf("unknown check family: %s", c.Family)
+	}
+}
+
+func validateMySQLCompatibleQueries(queries []Query) error {
+	var err error
+	for _, q := range queries {
+		if err = q.Type.Validate(); err != nil {
+			return err
+		}
+
+		switch q.Type { //nolint:exhaustive
+		case MySQLShow:
+		case MySQLSelect:
+		default:
+			return errors.Errorf("unsupported query type '%s' for mySQL family", q.Type)
+		}
+
+		if err = validateQuery(q.Type, q.Query); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func validatePostgreSQLCompatibleQueries(queries []Query) error {
+	var err error
+	for _, q := range queries {
+		if err = q.Type.Validate(); err != nil {
+			return err
+		}
+
+		switch q.Type { //nolint:exhaustive
+		case PostgreSQLShow:
+		case PostgreSQLSelect:
+		default:
+			return errors.Errorf("unsupported query type '%s' for postgreSQL family", q.Type)
+		}
+
+		if err = validateQuery(q.Type, q.Query); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func validateMongoDBCompatibleQueries(queries []Query) error {
+	var err error
+	for _, q := range queries {
+		if err = q.Type.Validate(); err != nil {
+			return err
+		}
+
+		switch q.Type { //nolint:exhaustive
+		case MongoDBGetParameter:
+		case MongoDBBuildInfo:
+		case MongoDBGetCmdLineOpts:
+		default:
+			return errors.Errorf("unsupported query type '%s' for mongoDB family", q.Type)
+		}
+
+		if err = validateQuery(q.Type, q.Query); err != nil {
+			return err
 		}
 	}
 
