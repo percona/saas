@@ -1,8 +1,16 @@
 package logger
 
 import (
+	"context"
+	"fmt"
+
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/grpclog"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/proto"
 )
 
 // GRPC is a compatibility wrapper between zap's sugared logger entry and gRPC logger interface.
@@ -38,3 +46,55 @@ func (g *GRPC) Fatalln(args ...interface{}) { g.Fatal(args...) }
 
 // Check interfaces.
 var _ grpclog.LoggerV2 = (*GRPC)(nil)
+
+//nolint:gochecknoglobals
+var protoMarshalOpts = protojson.MarshalOptions{
+	UseProtoNames:   true,
+	UseEnumNumbers:  false,
+	EmitUnpopulated: true,
+}
+
+// GRPCMessageDumper helper struct for dumping gRPC message using zap logger.
+type GRPCMessageDumper struct {
+	msg       interface{}
+	ctx       context.Context //nolint: containedctx
+	info      *grpc.UnaryServerInfo
+	isRequest bool
+}
+
+// NewGRPCMessageDumper creates gRPC message dumper for zap logger.
+func NewGRPCMessageDumper(ctx context.Context, msg interface{}, info *grpc.UnaryServerInfo, isRequest bool) *GRPCMessageDumper {
+	return &GRPCMessageDumper{
+		ctx:       ctx,
+		msg:       msg,
+		info:      info,
+		isRequest: isRequest,
+	}
+}
+
+// MarshalLogObject implements zapcore.ObjectMarshaler interface.
+func (d *GRPCMessageDumper) MarshalLogObject(enc zapcore.ObjectEncoder) error {
+	if d.isRequest {
+		if md, ok := metadata.FromIncomingContext(d.ctx); ok {
+			zap.Any("metadata", md).AddTo(enc)
+		}
+		enc.AddString("method", d.info.FullMethod)
+	}
+
+	if d.msg == nil {
+		return nil
+	}
+
+	protoMsg, ok := d.msg.(proto.Message)
+	if !ok {
+		enc.AddString("error", fmt.Sprintf("not proto.Message: %v", d.msg))
+	} else {
+		buf, err := protoMarshalOpts.Marshal(protoMsg)
+		if err != nil {
+			return err
+		}
+		enc.AddByteString("fields", buf)
+	}
+
+	return nil
+}

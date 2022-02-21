@@ -2,27 +2,63 @@ syntax = "proto3";
 
 package percona.platform.auth.v1;
 
-option go_package = "auth;authv1";
+option go_package = "/auth;authv1";
 
-import "github.com/mwitkow/go-proto-validators/validator.proto";
+import "validator/validator.proto";
 import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
 
 // AuthAPI provides API for authentication and authorization for Percona services.
 service AuthAPI {
   // SignUp creates new user with given email and password.
-  rpc SignUp(SignUpRequest) returns (SignUpResponse);
+  rpc SignUp(SignUpRequest) returns (SignUpResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/SignUp"
+      body: "*"
+    };
+  }
   // SignIn checks user authentication, creates session and returns session ID.
-  rpc SignIn(SignInRequest) returns (SignInResponse);
+  rpc SignIn(SignInRequest) returns (SignInResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/SignIn"
+      body: "*"
+    };
+  }
   // SignOut terminates user session.
-  rpc SignOut(SignOutRequest) returns (SignOutResponse);
+  rpc SignOut(SignOutRequest) returns (SignOutResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/SignOut"
+      body: "*"
+    };
+  }
   // RefreshSession refreshes session timeout.
-  rpc RefreshSession(RefreshSessionRequest) returns (RefreshSessionResponse);
+  rpc RefreshSession(RefreshSessionRequest) returns (RefreshSessionResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/RefreshSession"
+      body: "*"
+    };
+  }
   // ResetPassword initiates user's password reset procedure.
-  rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
+  rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/ResetPassword"
+      body: "*"
+    };
+  }
   // GetProfile returns user's email, first name and last name.
-  rpc GetProfile(GetProfileRequest) returns (GetProfileResponse);
+  rpc GetProfile(GetProfileRequest) returns (GetProfileResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/GetProfile"
+      body: "*"
+    };
+  }
   // UpdateProfile updates user's first name and last name.
-  rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse);
+  rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/UpdateProfile"
+      body: "*"
+    };
+  }
 }
 
 message SignUpRequest {
@@ -62,6 +98,16 @@ message SignInResponse {
   string session_id = 1;
   // Session expiration time.
   google.protobuf.Timestamp expire_time = 2;
+
+  // OAuth token type.
+  string token_type = 3;
+
+  // OAuth token expiration period (sec).
+  // This field is applicable to access_token only.
+  int32 expires_in = 4;
+
+  // OAuth token.
+  string access_token = 5;
 }
 
 message SignOutRequest {}

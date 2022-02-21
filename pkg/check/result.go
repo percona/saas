@@ -12,7 +12,7 @@ import (
 type Result struct {
 	Summary     string            `json:"summary"`       // required
 	Description string            `json:"description"`   // optional
-	ReadMoreURL string            `json:"read_more_url"` // optional
+	ReadMoreURL string            `json:"read_more_url"` //nolint:tagliatelle // optional
 	Severity    common.Severity   `json:"severity"`      // required
 	Labels      map[string]string `json:"labels"`        // optional
 }

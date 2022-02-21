@@ -100,10 +100,11 @@ func (env *Env) run(funcName string, args starlark.Tuple, threadName string, pri
 
 	globals, err := env.p.Init(thread, env.predeclared)
 	if err != nil {
-		if ee, ok := err.(*starlark.EvalError); ok {
+		var eErr *starlark.EvalError
+		if ok := errors.As(err, &eErr); ok {
 			// tweak message, but keep original type, callstack, and cause
-			ee.Msg = fmt.Sprintf("thread %s: failed to init script: %s\n%s", threadName, ee.Msg, ee.CallStack)
-			return nil, ee
+			eErr.Msg = fmt.Sprintf("thread %s: failed to init script: %s\n%s", threadName, eErr.Msg, eErr.CallStack)
+			return nil, eErr
 		}
 		return nil, errors.Wrapf(err, "thread %s: failed to init script", threadName)
 	}
@@ -116,10 +117,11 @@ func (env *Env) run(funcName string, args starlark.Tuple, threadName string, pri
 
 	v, err := starlark.Call(thread, fn, args, nil)
 	if err != nil {
-		if ee, ok := err.(*starlark.EvalError); ok {
+		var eErr *starlark.EvalError
+		if ok := errors.As(err, &eErr); ok {
 			// tweak message, but keep original type, callstack, and cause
-			ee.Msg = fmt.Sprintf("thread %s: failed to execute function %s: %s\n%s", threadName, funcName, ee.Msg, ee.CallStack) //nolint:lll
-			return nil, ee
+			eErr.Msg = fmt.Sprintf("thread %s: failed to execute function %s: %s\n%s", threadName, funcName, eErr.Msg, eErr.CallStack) //nolint:lll
+			return nil, eErr
 		}
 		return nil, errors.Wrapf(err, "thread %s: failed to execute function %s", threadName, funcName)
 	}
