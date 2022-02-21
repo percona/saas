@@ -8,16 +8,16 @@ import (
 	math "math"
 
 	proto "github.com/golang/protobuf/proto"
-	_ "github.com/mwitkow/go-proto-validators"
 	github_com_mwitkow_go_proto_validators "github.com/mwitkow/go-proto-validators"
+	_ "google.golang.org/genproto/googleapis/api/annotations"
+
+	_ "github.com/percona-platform/saas/gen/validator"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
-var (
-	_ = proto.Marshal
-	_ = fmt.Errorf
-	_ = math.Inf
-)
+var _ = proto.Marshal
+var _ = fmt.Errorf
+var _ = math.Inf
 
 func (this *ReportRequest) Validate() error {
 	if len(this.Events) < 1 {
@@ -32,7 +32,6 @@ func (this *ReportRequest) Validate() error {
 	}
 	return nil
 }
-
 func (this *ReportResponse) Validate() error {
 	return nil
 }

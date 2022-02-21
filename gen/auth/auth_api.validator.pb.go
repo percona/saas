@@ -8,17 +8,17 @@ import (
 	math "math"
 
 	proto "github.com/golang/protobuf/proto"
-	_ "github.com/golang/protobuf/ptypes/timestamp"
-	_ "github.com/mwitkow/go-proto-validators"
 	github_com_mwitkow_go_proto_validators "github.com/mwitkow/go-proto-validators"
+	_ "google.golang.org/genproto/googleapis/api/annotations"
+	_ "google.golang.org/protobuf/types/known/timestamppb"
+
+	_ "github.com/percona-platform/saas/gen/validator"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
-var (
-	_ = proto.Marshal
-	_ = fmt.Errorf
-	_ = math.Inf
-)
+var _ = proto.Marshal
+var _ = fmt.Errorf
+var _ = math.Inf
 
 func (this *SignUpRequest) Validate() error {
 	if this.Email == "" {
@@ -26,11 +26,9 @@ func (this *SignUpRequest) Validate() error {
 	}
 	return nil
 }
-
 func (this *SignUpResponse) Validate() error {
 	return nil
 }
-
 func (this *SignInRequest) Validate() error {
 	if this.Email == "" {
 		return github_com_mwitkow_go_proto_validators.FieldError("Email", fmt.Errorf(`value '%v' must not be an empty string`, this.Email))
@@ -40,7 +38,6 @@ func (this *SignInRequest) Validate() error {
 	}
 	return nil
 }
-
 func (this *SignInResponse) Validate() error {
 	if this.ExpireTime != nil {
 		if err := github_com_mwitkow_go_proto_validators.CallValidatorIfExists(this.ExpireTime); err != nil {
@@ -49,19 +46,15 @@ func (this *SignInResponse) Validate() error {
 	}
 	return nil
 }
-
 func (this *SignOutRequest) Validate() error {
 	return nil
 }
-
 func (this *SignOutResponse) Validate() error {
 	return nil
 }
-
 func (this *RefreshSessionRequest) Validate() error {
 	return nil
 }
-
 func (this *RefreshSessionResponse) Validate() error {
 	if this.ExpireTime != nil {
 		if err := github_com_mwitkow_go_proto_validators.CallValidatorIfExists(this.ExpireTime); err != nil {
@@ -70,26 +63,21 @@ func (this *RefreshSessionResponse) Validate() error {
 	}
 	return nil
 }
-
 func (this *ResetPasswordRequest) Validate() error {
 	if this.Email == "" {
 		return github_com_mwitkow_go_proto_validators.FieldError("Email", fmt.Errorf(`value '%v' must not be an empty string`, this.Email))
 	}
 	return nil
 }
-
 func (this *ResetPasswordResponse) Validate() error {
 	return nil
 }
-
 func (this *GetProfileRequest) Validate() error {
 	return nil
 }
-
 func (this *GetProfileResponse) Validate() error {
 	return nil
 }
-
 func (this *UpdateProfileRequest) Validate() error {
 	if this.FirstName == "" {
 		return github_com_mwitkow_go_proto_validators.FieldError("FirstName", fmt.Errorf(`value '%v' must not be an empty string`, this.FirstName))
@@ -99,7 +87,6 @@ func (this *UpdateProfileRequest) Validate() error {
 	}
 	return nil
 }
-
 func (this *UpdateProfileResponse) Validate() error {
 	return nil
 }
