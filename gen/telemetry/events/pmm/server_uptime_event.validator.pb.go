@@ -11,6 +11,7 @@ import (
 	_ "github.com/mwitkow/go-proto-validators"
 	github_com_mwitkow_go_proto_validators "github.com/mwitkow/go-proto-validators"
 	_ "google.golang.org/protobuf/types/known/durationpb"
+	_ "google.golang.org/protobuf/types/known/timestamppb"
 	_ "google.golang.org/protobuf/types/known/wrapperspb"
 )
 
@@ -47,5 +48,46 @@ func (this *ServerUptimeEvent) Validate() error {
 			return github_com_mwitkow_go_proto_validators.FieldError("IaEnabled", err)
 		}
 	}
+	return nil
+}
+func (this *ServerMetric) Validate() error {
+	if !(len(this.Id) == 16) {
+		return github_com_mwitkow_go_proto_validators.FieldError("Id", fmt.Errorf(`value '%v' must have a length equal to '16'`, this.Id))
+	}
+	if nil == this.Time {
+		return github_com_mwitkow_go_proto_validators.FieldError("Time", fmt.Errorf("message must exist"))
+	}
+	if this.Time != nil {
+		if err := github_com_mwitkow_go_proto_validators.CallValidatorIfExists(this.Time); err != nil {
+			return github_com_mwitkow_go_proto_validators.FieldError("Time", err)
+		}
+	}
+	if !(len(this.PmmServerTelemetryId) == 16) {
+		return github_com_mwitkow_go_proto_validators.FieldError("PmmServerTelemetryId", fmt.Errorf(`value '%v' must have a length equal to '16'`, this.PmmServerTelemetryId))
+	}
+	if !(len(this.PmmServerVersion) > 4) {
+		return github_com_mwitkow_go_proto_validators.FieldError("PmmServerVersion", fmt.Errorf(`value '%v' must have a length greater than '4'`, this.PmmServerVersion))
+	}
+	if nil == this.UpDuration {
+		return github_com_mwitkow_go_proto_validators.FieldError("UpDuration", fmt.Errorf("message must exist"))
+	}
+	if this.UpDuration != nil {
+		if err := github_com_mwitkow_go_proto_validators.CallValidatorIfExists(this.UpDuration); err != nil {
+			return github_com_mwitkow_go_proto_validators.FieldError("UpDuration", err)
+		}
+	}
+	if _, ok := DistributionMethod_name[int32(this.DistributionMethod)]; !ok {
+		return github_com_mwitkow_go_proto_validators.FieldError("DistributionMethod", fmt.Errorf(`value '%v' must be a valid DistributionMethod field`, this.DistributionMethod))
+	}
+	for _, item := range this.Metrics {
+		if item != nil {
+			if err := github_com_mwitkow_go_proto_validators.CallValidatorIfExists(item); err != nil {
+				return github_com_mwitkow_go_proto_validators.FieldError("Metrics", err)
+			}
+		}
+	}
+	return nil
+}
+func (this *ServerMetric_Metric) Validate() error {
 	return nil
 }

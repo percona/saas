@@ -6,6 +6,8 @@ option go_package = "/telemetry/reporter;reporterv1";
 
 import "github.com/mwitkow/go-proto-validators/validator.proto";
 import "telemetry/reporter/event.proto";
+import "telemetry/events/pmm/server_uptime_event.proto";
+import "google/protobuf/duration.proto";
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
@@ -69,11 +71,11 @@ service ReporterAPI {
 
 message ReportRequest {
   // One or more events to report.
-  repeated Event events = 1 [
-    (validator.field) = {
-      repeated_count_min: 1
-    }
-  ];
+  repeated Event events = 1;
+
+  // One or more metrics events to report.
+  // Only 'events' or 'metrics' field must be set.
+  repeated events.pmm.v1.ServerMetric metrics = 2;
 }
 
 message ReportResponse {}
