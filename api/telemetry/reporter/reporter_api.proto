@@ -4,7 +4,7 @@ package percona.platform.telemetry.reporter.v1;
 
 option go_package = "/telemetry/reporter;reporterv1";
 
-import "github.com/mwitkow/go-proto-validators/validator.proto";
+import "validator/validator.proto";
 import "telemetry/reporter/event.proto";
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
