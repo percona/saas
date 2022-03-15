@@ -133,7 +133,7 @@ const (
 type Type string
 
 // Validate validates check type.
-func (t Type) Validate() error {
+func (t Type) Validate() error { // nolint:cyclop
 	switch t {
 	case MySQLShow:
 		fallthrough
@@ -256,7 +256,7 @@ func (c *Check) validateScript() error {
 	return nil
 }
 
-func (c *Check) validateQuery() error {
+func (c *Check) validateQuery() error { // nolint:cyclop
 	switch c.Type {
 	case PostgreSQLShow:
 		fallthrough
