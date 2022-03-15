@@ -4,7 +4,7 @@ package percona.platform.auth.v1;
 
 option go_package = "/auth;authv1";
 
-import "validator/validator.proto";
+import "github.com/mwitkow/go-proto-validators/validator.proto";
 import "google/protobuf/timestamp.proto";
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
