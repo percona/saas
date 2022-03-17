@@ -4,9 +4,42 @@ package percona.platform.auth.v1;
 
 option go_package = "/auth;authv1";
 
-import "validator/validator.proto";
+import "github.com/mwitkow/go-proto-validators/validator.proto";
 import "google/protobuf/timestamp.proto";
 import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Auth API";
+  };
+  extensions: {
+    key: "x-readme";
+    value:{
+      struct_value: {
+        fields: {
+          key: "samples-languages"
+          value: {
+            list_value: {
+              values: {
+                string_value: "curl";
+              }
+              values: {
+                string_value: "go";
+              }
+              values: {
+                string_value: "node";
+              }
+              values: {
+                string_value: "python";
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+};
 
 // AuthAPI provides API for authentication and authorization for Percona services.
 service AuthAPI {
@@ -16,12 +49,24 @@ service AuthAPI {
       post: "/v1/auth/SignUp"
       body: "*"
     };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "SignUp creates new user with given email and password.";
+      summary: "SignUp";
+      consumes: ["application/json"];
+      produces: ["application/json"];
+    };
   }
   // SignIn checks user authentication, creates session and returns session ID.
   rpc SignIn(SignInRequest) returns (SignInResponse) {
     option (google.api.http) = {
       post: "/v1/auth/SignIn"
       body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "SignIn checks user authentication, creates session and returns session ID.";
+      summary: "SignIn";
+      consumes: ["application/json"];
+      produces: ["application/json"];
     };
   }
   // SignOut terminates user session.
@@ -30,12 +75,24 @@ service AuthAPI {
       post: "/v1/auth/SignOut"
       body: "*"
     };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "SignOut terminates user session.";
+      summary: "SignOut";
+      consumes: ["application/json"];
+      produces: ["application/json"];
+    };
   }
   // RefreshSession refreshes session timeout.
   rpc RefreshSession(RefreshSessionRequest) returns (RefreshSessionResponse) {
     option (google.api.http) = {
       post: "/v1/auth/RefreshSession"
       body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "RefreshSession refreshes session timeout.";
+      summary: "RefreshSession";
+      consumes: ["application/json"];
+      produces: ["application/json"];
     };
   }
   // ResetPassword initiates user's password reset procedure.
@@ -44,6 +101,12 @@ service AuthAPI {
       post: "/v1/auth/ResetPassword"
       body: "*"
     };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "ResetPassword initiates user's password reset procedure.";
+      summary: "ResetPassword";
+      consumes: ["application/json"];
+      produces: ["application/json"];
+    };
   }
   // GetProfile returns user's email, first name and last name.
   rpc GetProfile(GetProfileRequest) returns (GetProfileResponse) {
@@ -51,12 +114,24 @@ service AuthAPI {
       post: "/v1/auth/GetProfile"
       body: "*"
     };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "GetProfile returns user's email, first name and last name.";
+      summary: "GetProfile";
+      consumes: ["application/json"];
+      produces: ["application/json"];
+    };
   }
   // UpdateProfile updates user's first name and last name.
   rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse) {
     option (google.api.http) = {
       post: "/v1/auth/UpdateProfile"
       body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "UpdateProfile updates user's first name and last name.";
+      summary: "UpdateProfile";
+      consumes: ["application/json"];
+      produces: ["application/json"];
     };
   }
 }

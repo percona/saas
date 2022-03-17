@@ -5,6 +5,39 @@ package percona.platform.check.retrieval.v1;
 option go_package = "/check/retrieval;retrievalv1";
 
 import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Retrieval API";
+  };
+  extensions: {
+    key: "x-readme";
+    value:{
+      struct_value: {
+        fields: {
+          key: "samples-languages"
+          value: {
+            list_value: {
+              values: {
+                string_value: "curl";
+              }
+              values: {
+                string_value: "go";
+              }
+              values: {
+                string_value: "node";
+              }
+              values: {
+                string_value: "python";
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+};
 
 // RetrievalAPI provides API for retrieving Security Threat Tool checks
 // and Integrated Alerting rules from Percona Check Service.
@@ -15,12 +48,24 @@ service RetrievalAPI {
       post: "/v1/check/GetAllChecks"
       body: "*"
     };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Retrieves all check scripts a user is entitled to according to the tier.";
+      summary: "Get all checks";
+      consumes: ["application/json"];
+      produces: ["application/json"];
+    };
   }
   // GetAllAlertRuleTemplates returns all available IA rule templates.
   rpc GetAllAlertRuleTemplates(GetAllAlertRuleTemplatesRequest) returns (GetAllAlertRuleTemplatesResponse) {
     option (google.api.http) = {
       post: "/v1/check/GetAllAlertRuleTemplates"
       body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Retrieves all alert rule templates a user is entitled to according to the tier.";
+      summary: "Get all alert rule templates";
+      consumes: ["application/json"];
+      produces: ["application/json"];
     };
   }
 }
