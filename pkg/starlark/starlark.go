@@ -134,6 +134,7 @@ func (env *Env) run(funcName string, args starlark.Tuple, threadName string, pri
 // Id is used to separate that execution from other and used only for debugging.
 // print is a user-suplied Starlark 'print' function implementation.
 func (env *Env) Run(id string, input interface{}, contextFuncs map[string]GoFunc, printFunc PrintFunc) ([]check.Result, error) {
+	var err error
 	rows, err := prepareInput(input)
 	if err != nil {
 		return nil, errors.Wrapf(err, "thread %s", id)

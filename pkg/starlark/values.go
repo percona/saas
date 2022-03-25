@@ -15,10 +15,8 @@ import (
 //  * float64 -> float;
 //  * string, []byte -> string;
 //  * time.Time -> int (UNIX timestamp in nanoseconds);
-//  * map[string]interface{} -> dict;
 //  * []interface{} -> list;
-//  * []map[string]interface -> list;
-//  * [][]map[string]interface{} -> list;
+//  * map[string]interface{} -> dict.
 func goToStarlark(v interface{}) (starlark.Value, error) { //nolint: cyclop, funlen
 	switch v := v.(type) {
 	case nil:
