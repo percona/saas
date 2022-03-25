@@ -4,9 +4,44 @@ package percona.platform.telemetry.reporter.v1;
 
 option go_package = "/telemetry/reporter;reporterv1";
 
-import "validator/validator.proto";
+import "github.com/mwitkow/go-proto-validators/validator.proto";
 import "telemetry/reporter/event.proto";
+import "telemetry/events/pmm/server_uptime_event.proto";
+import "google/protobuf/duration.proto";
 import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Reporter API";
+  };
+  extensions: {
+    key: "x-readme";
+    value:{
+      struct_value: {
+        fields: {
+          key: "samples-languages"
+          value: {
+            list_value: {
+              values: {
+                string_value: "curl";
+              }
+              values: {
+                string_value: "go";
+              }
+              values: {
+                string_value: "node";
+              }
+              values: {
+                string_value: "python";
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+};
 
 // ReporterAPI describes server API for reporting telemetry events.
 service ReporterAPI {
@@ -16,16 +51,31 @@ service ReporterAPI {
       post: "/v1/telemetry/Report"
       body: "*"
     };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Report is used to submit telemetry events to telemetryd service.";
+      summary: "Report";
+      consumes: ["application/json"];
+      produces: ["application/json"];
+      responses: {
+        key: "200";
+        value: {
+          examples: {
+            key: "application/json"
+            value: '{}'
+          }
+        };
+      };
+    };
   }
 }
 
 message ReportRequest {
   // One or more events to report.
-  repeated Event events = 1 [
-    (validator.field) = {
-      repeated_count_min: 1
-    }
-  ];
+  repeated Event events = 1;
+
+  // One or more metrics events to report.
+  // Only 'events' or 'metrics' field must be set.
+  repeated events.pmm.v1.ServerMetric metrics = 2;
 }
 
 message ReportResponse {}

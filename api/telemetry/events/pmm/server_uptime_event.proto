@@ -4,9 +4,10 @@ package percona.platform.telemetry.events.pmm.v1;
 
 option go_package = "/telemetry/events/pmm;pmmv1";
 
-import "validator/validator.proto";
+import "github.com/mwitkow/go-proto-validators/validator.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
 
 // DistributionMethod represents PMM Server distribution method.
 enum DistributionMethod {
@@ -55,4 +56,58 @@ message ServerUptimeEvent {
   google.protobuf.BoolValue stt_enabled = 5;
   // PMM Server IA enabled.
   google.protobuf.BoolValue ia_enabled = 6;
+}
+
+// ServerMetrics contains PMM Server metrics.
+// There are mandatory metrics and optional metric pairs.
+// The exact metrics pairs (metric name, metric value) is defined by PMM Server.
+message ServerMetric {
+  // Event UUID.
+  bytes id = 1 [
+    (validator.field) = {
+      length_eq: 16
+    }
+  ];
+  // Time when this event was received by the sender.
+  google.protobuf.Timestamp time = 2 [
+    (validator.field) = {
+      msg_exists: true
+    }
+  ];
+  // PMM Server unique Telemetry identifier.
+  // Mandatory.
+  bytes pmm_server_telemetry_id = 3 [
+    (validator.field) = {
+      length_eq: 16
+    }
+  ];
+  // PMM Server version.
+  // Mandatory.
+  string pmm_server_version = 4 [
+    (validator.field) = {
+      length_gt: 4
+    }
+  ];
+  // PMM Server uptime.
+  // Mandatory.
+  google.protobuf.Duration up_duration = 5 [
+    (validator.field) = {
+      msg_exists: true
+    }
+  ];
+  // PMM Server distribution method.
+  // Mandatory.
+  DistributionMethod distribution_method = 6 [
+    (validator.field) = {
+      is_in_enum: true
+    }
+  ];
+
+  message Metric {
+    string key = 1;
+    string value = 2;
+  }
+  // PMM server metrics collection.
+  // Optional.
+  repeated Metric metrics = 7;
 }

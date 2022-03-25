@@ -1,0 +1,238 @@
+syntax = "proto3";
+
+package percona.platform.auth.v1;
+
+option go_package = "/auth;authv1";
+
+import "github.com/mwitkow/go-proto-validators/validator.proto";
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Auth API";
+  };
+  extensions: {
+    key: "x-readme";
+    value:{
+      struct_value: {
+        fields: {
+          key: "samples-languages"
+          value: {
+            list_value: {
+              values: {
+                string_value: "curl";
+              }
+              values: {
+                string_value: "go";
+              }
+              values: {
+                string_value: "node";
+              }
+              values: {
+                string_value: "python";
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+// AuthAPI provides API for authentication and authorization for Percona services.
+service AuthAPI {
+  // SignUp creates new user with given email and password.
+  rpc SignUp(SignUpRequest) returns (SignUpResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/SignUp"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "SignUp creates new user with given email and password.";
+      summary: "SignUp";
+      consumes: ["application/json"];
+      produces: ["application/json"];
+    };
+  }
+  // SignIn checks user authentication, creates session and returns session ID.
+  rpc SignIn(SignInRequest) returns (SignInResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/SignIn"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "SignIn checks user authentication, creates session and returns session ID.";
+      summary: "SignIn";
+      consumes: ["application/json"];
+      produces: ["application/json"];
+    };
+  }
+  // SignOut terminates user session.
+  rpc SignOut(SignOutRequest) returns (SignOutResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/SignOut"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "SignOut terminates user session.";
+      summary: "SignOut";
+      consumes: ["application/json"];
+      produces: ["application/json"];
+    };
+  }
+  // RefreshSession refreshes session timeout.
+  rpc RefreshSession(RefreshSessionRequest) returns (RefreshSessionResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/RefreshSession"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "RefreshSession refreshes session timeout.";
+      summary: "RefreshSession";
+      consumes: ["application/json"];
+      produces: ["application/json"];
+    };
+  }
+  // ResetPassword initiates user's password reset procedure.
+  rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/ResetPassword"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "ResetPassword initiates user's password reset procedure.";
+      summary: "ResetPassword";
+      consumes: ["application/json"];
+      produces: ["application/json"];
+    };
+  }
+  // GetProfile returns user's email, first name and last name.
+  rpc GetProfile(GetProfileRequest) returns (GetProfileResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/GetProfile"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "GetProfile returns user's email, first name and last name.";
+      summary: "GetProfile";
+      consumes: ["application/json"];
+      produces: ["application/json"];
+    };
+  }
+  // UpdateProfile updates user's first name and last name.
+  rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/UpdateProfile"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "UpdateProfile updates user's first name and last name.";
+      summary: "UpdateProfile";
+      consumes: ["application/json"];
+      produces: ["application/json"];
+    };
+  }
+}
+
+message SignUpRequest {
+  // User email.
+  string email = 1 [
+    (validator.field) = {
+      string_not_empty: true
+    }
+  ];
+  // User password.
+  string password = 2 [deprecated = true];
+  // User first name.
+  string first_name = 3;
+  // User last name.
+  string last_name = 4;
+}
+
+message SignUpResponse {}
+
+message SignInRequest {
+  // User email.
+  string email = 1 [
+    (validator.field) = {
+      string_not_empty: true
+    }
+  ];
+  // User password.
+  string password = 2 [
+    (validator.field) = {
+      string_not_empty: true
+    }
+  ];
+}
+
+message SignInResponse {
+  // Session ID.
+  string session_id = 1;
+  // Session expiration time.
+  google.protobuf.Timestamp expire_time = 2;
+
+  // OAuth token type.
+  string token_type = 3;
+
+  // OAuth token expiration period (sec).
+  // This field is applicable to access_token only.
+  int32 expires_in = 4;
+
+  // OAuth token.
+  string access_token = 5;
+}
+
+message SignOutRequest {}
+
+message SignOutResponse {}
+
+message RefreshSessionRequest {}
+
+message RefreshSessionResponse {
+  // Session expiration time.
+  google.protobuf.Timestamp expire_time = 1;
+  // User email.
+  string email = 2;
+}
+
+message ResetPasswordRequest {
+  // User email.
+  string email = 1 [
+    (validator.field) = {
+      string_not_empty: true
+    }
+  ];
+}
+
+message ResetPasswordResponse {}
+
+message GetProfileRequest {}
+
+message GetProfileResponse {
+  // User email.
+  string email = 1;
+  // User first name.
+  string first_name = 2;
+  // User last name.
+  string last_name = 3;
+}
+
+message UpdateProfileRequest {
+  // User first name.
+  string first_name = 1 [
+    (validator.field) = {
+      string_not_empty: true
+    }
+  ];
+  // User last name.
+  string last_name = 2 [
+    (validator.field) = {
+      string_not_empty: true
+    }
+  ];
+}
+
+message UpdateProfileResponse {}

@@ -118,20 +118,22 @@ func Parse(reader io.Reader, params *ParseParams) ([]Check, error) {
 
 // Supported check types.
 const (
-	MySQLShow             = Type("MYSQL_SHOW")
-	MySQLSelect           = Type("MYSQL_SELECT")
-	PostgreSQLShow        = Type("POSTGRESQL_SHOW")
-	PostgreSQLSelect      = Type("POSTGRESQL_SELECT")
-	MongoDBGetParameter   = Type("MONGODB_GETPARAMETER")
-	MongoDBBuildInfo      = Type("MONGODB_BUILDINFO")
-	MongoDBGetCmdLineOpts = Type("MONGODB_GETCMDLINEOPTS")
+	MySQLShow                = Type("MYSQL_SHOW")
+	MySQLSelect              = Type("MYSQL_SELECT")
+	PostgreSQLShow           = Type("POSTGRESQL_SHOW")
+	PostgreSQLSelect         = Type("POSTGRESQL_SELECT")
+	MongoDBGetParameter      = Type("MONGODB_GETPARAMETER")
+	MongoDBBuildInfo         = Type("MONGODB_BUILDINFO")
+	MongoDBGetCmdLineOpts    = Type("MONGODB_GETCMDLINEOPTS")
+	MongoDBReplSetGetStatus  = Type("MONGODB_REPLSETGETSTATUS")
+	MongoDBGetDiagnosticData = Type("MONGODB_GETDIAGNOSTICDATA")
 )
 
 // Type represents check type.
 type Type string
 
 // Validate validates check type.
-func (t Type) Validate() error {
+func (t Type) Validate() error { // nolint:cyclop
 	switch t {
 	case MySQLShow:
 		fallthrough
@@ -146,6 +148,10 @@ func (t Type) Validate() error {
 	case MongoDBBuildInfo:
 		fallthrough
 	case MongoDBGetCmdLineOpts:
+		fallthrough
+	case MongoDBReplSetGetStatus:
+		fallthrough
+	case MongoDBGetDiagnosticData:
 		return nil
 	case "":
 		return errors.New("check type is empty")
@@ -250,7 +256,7 @@ func (c *Check) validateScript() error {
 	return nil
 }
 
-func (c *Check) validateQuery() error {
+func (c *Check) validateQuery() error { // nolint:cyclop
 	switch c.Type {
 	case PostgreSQLShow:
 		fallthrough
@@ -259,6 +265,10 @@ func (c *Check) validateQuery() error {
 	case MongoDBBuildInfo:
 		fallthrough
 	case MongoDBGetCmdLineOpts:
+		fallthrough
+	case MongoDBReplSetGetStatus:
+		fallthrough
+	case MongoDBGetDiagnosticData:
 		if c.Query != "" {
 			return errors.Errorf("%s check type should have empty query", c.Type)
 		}
