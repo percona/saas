@@ -224,8 +224,9 @@ type Check struct {
 	Name        string        `yaml:"name"`
 	Summary     string        `yaml:"summary"`
 	Description string        `yaml:"description"`
-	Type        Type          `yaml:"type,omitempty"`   // for v1
-	Family      Family        `yaml:"family,omitempty"` // for v2
+	Type        Type          `yaml:"type,omitempty"`     // for v1
+	Category    string        `yaml:"category,omitempty"` // optional for v1, required for v2
+	Family      Family        `yaml:"family,omitempty"`   // for v2
 	Tiers       []common.Tier `yaml:"tiers,flow,omitempty"`
 	Interval    Interval      `yaml:"interval,omitempty"`
 	Query       string        `yaml:"query,omitempty"`   // for v1
@@ -315,6 +316,11 @@ func (c *Check) validateV2() error {
 
 	if c.Query != "" {
 		return errors.New("field 'query' is part of check format version 1 and can't be used in version 2")
+	}
+
+	// category is optional for v1 so that existing checks can continue working, but we make it required for v2.
+	if c.Category == "" {
+		return errors.New("category is empty")
 	}
 
 	return nil
