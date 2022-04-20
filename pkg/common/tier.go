@@ -10,6 +10,7 @@ type Tier string
 const (
 	Anonymous  = Tier("anonymous")
 	Registered = Tier("registered")
+	Paid       = Tier("paid")
 )
 
 // Validate validates tier value.
@@ -17,6 +18,9 @@ func (t Tier) Validate() error {
 	switch t {
 	case Anonymous:
 	case Registered:
+	case Paid:
+	case "":
+		return errors.New("tier is empty")
 	default:
 		return errors.Errorf("unknown check tier: %q", t)
 	}
@@ -24,7 +28,7 @@ func (t Tier) Validate() error {
 	return nil
 }
 
-// ValidateTiers validates tiers.
+// ValidateTiers validates tiers and checks for duplicates.
 func ValidateTiers(tiers []Tier) error {
 	m := make(map[Tier]struct{}, len(tiers))
 	for _, tier := range tiers {
