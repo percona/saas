@@ -17,7 +17,7 @@ import (
 //   - time.Time -> int (UNIX timestamp in nanoseconds);
 //   - []interface{} -> list;
 //   - map[string]interface{} -> dict.
-func goToStarlark(v interface{}) (starlark.Value, error) { //nolint: cyclop
+func goToStarlark(v interface{}) (starlark.Value, error) { //nolint: cyclop,funlen
 	switch v := v.(type) {
 	case nil:
 		return starlark.None, nil

@@ -385,7 +385,7 @@ func validateQuery(typ Type, query string) error { // nolint:cyclop
 	return nil
 }
 
-func validateQueryParameters(typ Type, params map[Parameter]string) error {
+func validateQueryParameters(typ Type, params map[Parameter]string) error { //nolint:cyclop
 	switch typ {
 	case PostgreSQLShow:
 		fallthrough
@@ -475,20 +475,14 @@ func (c *Check) validateQueries() error {
 
 	switch c.Family {
 	case MySQL:
-		err = checkQueryForCompatibilityWithMySQLFamily(c.Queries)
+		return checkQueryForCompatibilityWithMySQLFamily(c.Queries)
 	case PostgreSQL:
-		err = checkQueryForCompatibilityWithPostgreSQLFamily(c.Queries)
+		return checkQueryForCompatibilityWithPostgreSQLFamily(c.Queries)
 	case MongoDB:
-		err = checkQueryForCompatibilityWithMonogDBFamily(c.Queries)
+		return checkQueryForCompatibilityWithMonogDBFamily(c.Queries)
 	default:
 		return errors.Errorf("unknown check family: %s", c.Family)
 	}
-
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func checkQueryForCompatibilityWithMySQLFamily(queries []Query) error {
