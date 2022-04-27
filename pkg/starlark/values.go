@@ -9,15 +9,15 @@ import (
 
 // goToStarlark converts Go value to Starlark value.
 // Supported types:
-//  * nil -> NoneType (None);
-//  * bool -> bool;
-//  * int64, uint64 -> int;
-//  * float64 -> float;
-//  * string, []byte -> string;
-//  * time.Time -> int (UNIX timestamp in nanoseconds);
-//  * []interface{} -> list;
-//  * map[string]interface{} -> dict.
-func goToStarlark(v interface{}) (starlark.Value, error) { //nolint: cyclop
+//   - nil -> NoneType (None);
+//   - bool -> bool;
+//   - int64, uint64 -> int;
+//   - float64 -> float;
+//   - string, []byte -> string;
+//   - time.Time -> int (UNIX timestamp in nanoseconds);
+//   - []interface{} -> list;
+//   - map[string]interface{} -> dict.
+func goToStarlark(v interface{}) (starlark.Value, error) { //nolint: cyclop,funlen
 	switch v := v.(type) {
 	case nil:
 		return starlark.None, nil
@@ -54,6 +54,28 @@ func goToStarlark(v interface{}) (starlark.Value, error) { //nolint: cyclop
 		}
 		return starlark.NewList(res), nil
 
+	case []map[string]interface{}:
+		res := make([]starlark.Value, len(v))
+		for i, el := range v {
+			sv, err := goToStarlark(el)
+			if err != nil {
+				return nil, err
+			}
+			res[i] = sv
+		}
+		return starlark.NewList(res), nil
+
+	case [][]map[string]interface{}:
+		res := make([]starlark.Value, len(v))
+		for i, el := range v {
+			sv, err := goToStarlark(el)
+			if err != nil {
+				return nil, err
+			}
+			res[i] = sv
+		}
+		return starlark.NewList(res), nil
+
 	case map[string]interface{}:
 		res := starlark.NewDict(len(v))
 		for k, gv := range v {
@@ -74,14 +96,14 @@ func goToStarlark(v interface{}) (starlark.Value, error) { //nolint: cyclop
 
 // starlarkToGo converts Starlark value to Go value.
 // Supported types:
-//  * NoneType -> nil;
-//  * bool -> bool;
-//  * int -> int64 or uint64;
-//  * float -> float64;
-//  * string -> string;
-//  * tuple -> []interface{}
-//  * list -> []interface{}
-//  * dict (with string keys) -> map[string]interface{}.
+//   - NoneType -> nil;
+//   - bool -> bool;
+//   - int -> int64 or uint64;
+//   - float -> float64;
+//   - string -> string;
+//   - tuple -> []interface{}
+//   - list -> []interface{}
+//   - dict (with string keys) -> map[string]interface{}.
 func starlarkToGo(v starlark.Value) (interface{}, error) { //nolint:funlen, cyclop
 	switch v := v.(type) {
 	case starlark.NoneType:

@@ -133,17 +133,15 @@ func (env *Env) run(funcName string, args starlark.Tuple, threadName string, pri
 // Run executes function 'check_context' with given query results and additional funcs known as 'context'.
 // Id is used to separate that execution from other and used only for debugging.
 // print is a user-suplied Starlark 'print' function implementation.
-func (env *Env) Run(id string, input []map[string]interface{}, contextFuncs map[string]GoFunc, printFunc PrintFunc) ([]check.Result, error) {
-	var rows *starlark.List
+func (env *Env) Run(id string, input interface{}, contextFuncs map[string]GoFunc, printFunc PrintFunc) ([]check.Result, error) {
+	var err error
 	rows, err := prepareInput(input)
 	if err != nil {
 		return nil, errors.Wrapf(err, "thread %s", id)
 	}
-
 	context := starlark.NewDict(len(contextFuncs))
 	for n, f := range contextFuncs {
-		err = context.SetKey(starlark.String(n), starlark.NewBuiltin(n, makeFunc(f)))
-		if err != nil {
+		if err = context.SetKey(starlark.String(n), starlark.NewBuiltin(n, makeFunc(f))); err != nil {
 			return nil, errors.Wrapf(err, "thread %s", id)
 		}
 	}
@@ -164,17 +162,13 @@ func (env *Env) Run(id string, input []map[string]interface{}, contextFuncs map[
 	return res, nil
 }
 
-func prepareInput(input []map[string]interface{}) (*starlark.List, error) {
-	values := make([]starlark.Value, len(input))
-	for i, v := range input {
-		sv, err := goToStarlark(v)
-		if err != nil {
-			return nil, err
-		}
-		values[i] = sv
+// prepareInput converts go types to starlark types.
+func prepareInput(input interface{}) (starlark.Value, error) {
+	l, err := goToStarlark(input)
+	if err != nil {
+		return nil, err
 	}
 
-	l := starlark.NewList(values)
 	l.Freeze()
 	return l, nil
 }
@@ -291,18 +285,20 @@ func CheckGlobals(c *check.Check, predeclaredFuncs map[string]GoFunc) error {
 		return err
 	}
 
-	_, ok := globals["check"].(*starlark.Function)
-	if !ok {
-		return fmt.Errorf("%s: no `check` function found", c.Name)
+	if c.Version == 1 {
+		if _, ok := globals["check"].(*starlark.Function); !ok {
+			return fmt.Errorf("%s: no `check` function found", c.Name)
+		}
 	}
-	_, ok = globals["check_context"].(*starlark.Function)
-	if !ok {
+
+	if _, ok := globals["check_context"].(*starlark.Function); !ok {
 		return fmt.Errorf("%s: no `check_context` function found", c.Name)
 	}
 	return nil
 }
 
 // modify unavoidable global state once on package initialization to avoid race conditions
+//
 //nolint:gochecknoinits
 func init() {
 	resolve.AllowFloat = true
