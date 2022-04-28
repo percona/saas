@@ -285,18 +285,20 @@ func CheckGlobals(c *check.Check, predeclaredFuncs map[string]GoFunc) error {
 		return err
 	}
 
-	_, ok := globals["check"].(*starlark.Function)
-	if !ok {
-		return fmt.Errorf("%s: no `check` function found", c.Name)
+	if c.Version == 1 {
+		if _, ok := globals["check"].(*starlark.Function); !ok {
+			return fmt.Errorf("%s: no `check` function found", c.Name)
+		}
 	}
-	_, ok = globals["check_context"].(*starlark.Function)
-	if !ok {
+
+	if _, ok := globals["check_context"].(*starlark.Function); !ok {
 		return fmt.Errorf("%s: no `check_context` function found", c.Name)
 	}
 	return nil
 }
 
 // modify unavoidable global state once on package initialization to avoid race conditions
+//
 //nolint:gochecknoinits
 func init() {
 	resolve.AllowFloat = true
