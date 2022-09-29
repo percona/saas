@@ -5,13 +5,13 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-// FlagsParsed is used to catch the common service initialization problem.
-// Do not set the value directly in the service code.
-//
-// nolint:godox
+//nolint:godox
 // TODO Can we do that better, without an exported global variable, dependency cycle,
 // and too much complexity of mutex-protected getters/setters?
 // https://jira.percona.com/browse/SAAS-275
+
+// FlagsParsed is used to catch the common service initialization problem.
+// Do not set the value directly in the service code.
 var FlagsParsed bool //nolint:gochecknoglobals
 
 // SetupGlobalOpts contains logger options.
