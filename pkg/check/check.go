@@ -136,7 +136,7 @@ const (
 type Type string
 
 // Validate validates check type.
-func (t Type) Validate() error { // nolint:cyclop
+func (t Type) Validate() error { //nolint:cyclop
 	switch t {
 	case MySQLShow:
 		fallthrough
@@ -352,7 +352,7 @@ func (c *Check) validateScript() error {
 	return nil
 }
 
-func validateQuery(typ Type, query string) error { // nolint:cyclop
+func validateQuery(typ Type, query string) error { //nolint:cyclop
 	switch typ {
 	case PostgreSQLShow:
 		fallthrough
@@ -521,6 +521,8 @@ func checkQueryForCompatibilityWithMonogDBFamily(queries []Query) error {
 		case MongoDBGetParameter:
 		case MongoDBBuildInfo:
 		case MongoDBGetCmdLineOpts:
+		case MongoDBGetDiagnosticData:
+		case MongoDBReplSetGetStatus:
 		case MetricsInstant:
 		case MetricsRange:
 		default:
