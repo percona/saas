@@ -9,6 +9,8 @@ import "telemetry/reporter/event.proto";
 import "telemetry/events/pmm/server_uptime_event.proto";
 import "google/protobuf/duration.proto";
 import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "utils/fsp/fsp.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
@@ -67,6 +69,21 @@ service ReporterAPI {
       };
     };
   }
+
+  // SearchEvent searches for a specific metric in telemetry events and returns them to the client.
+  // Can only be used by SuperAdmins.
+  rpc SearchEvent(SearchEventRequest) returns (SearchEventResponse) {
+    option (google.api.http) = {
+        post: "/v1/telemetry/events:search"
+        body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "SearchEvent searches for a specific metric in telemetry events and returns them to the client.";
+      summary: "SearchEvent";
+      consumes: ["application/json"];
+      produces: ["application/json"];
+    };
+  }
 }
 
 message ReportRequest {
@@ -79,3 +96,38 @@ message ReportRequest {
 }
 
 message ReportResponse {}
+
+message PMMServerMetric {
+  // Name of the metric requested by the client.
+  string metric_name = 1;
+  // Value of the metric requested by the client.
+  string metric_value = 2;
+}
+
+// PMMMetricEvent represents telemetry event containing metrics sent by PMM.
+message PMMMetricEvent {
+  // PMM Server UUID.
+  string pmm_server_telemetry_id = 1;
+  // Portal Organization UUID (Can be empty).
+  string portal_org_id = 2;
+  // Time when this event was created and received.
+  google.protobuf.Timestamp event_time = 3;
+  // Array of server metrics requested by the client.
+  repeated PMMServerMetric metrics = 4;
+}
+
+message SearchEventRequest {
+  // List of metrics requested by the client.
+  repeated string metrics = 1;
+  // Time range of events to search between.
+  google.protobuf.Timestamp starts_at = 2;
+  google.protobuf.Timestamp ends_at = 3;
+  utils.fsp.PageParams page_params = 4;
+}
+
+message SearchEventResponse {
+  // PMM metric events.
+  repeated PMMMetricEvent events = 1;
+  // pagination details.
+  utils.fsp.PageTotals page_totals = 2;
+}

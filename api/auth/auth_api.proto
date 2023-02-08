@@ -196,6 +196,25 @@ service AuthAPI {
       ];
     };
   }
+
+  // ValidateToken validates a one-time activationToken and returns 5-min living stateToken
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/ValidateToken"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Validates a one-time activationToken and returns 5-min living stateToken";
+      summary: "ValidateToken";
+      consumes: [
+        "application/json"
+      ];
+      produces: [
+        "application/json"
+      ];
+    };
+  }
+
 }
 
 message SignUpRequest {
@@ -351,3 +370,15 @@ message ActivateProfileRequest {
 }
 
 message ActivateProfileResponse {}
+
+
+message ValidateTokenRequest {
+  string activation_token = 1 [(validator.field) = {
+    string_not_empty: true
+  }];
+}
+
+message ValidateTokenResponse {
+  string state_token = 1;
+}
+

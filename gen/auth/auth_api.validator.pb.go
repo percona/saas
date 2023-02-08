@@ -125,3 +125,12 @@ func (this *ActivateProfileRequest_Profile) Validate() error {
 func (this *ActivateProfileResponse) Validate() error {
 	return nil
 }
+func (this *ValidateTokenRequest) Validate() error {
+	if this.ActivationToken == "" {
+		return github_com_mwitkow_go_proto_validators.FieldError("ActivationToken", fmt.Errorf(`value '%v' must not be an empty string`, this.ActivationToken))
+	}
+	return nil
+}
+func (this *ValidateTokenResponse) Validate() error {
+	return nil
+}

@@ -23,6 +23,12 @@ func (this *GetAllChecksRequest) Validate() error {
 func (this *GetAllChecksResponse) Validate() error {
 	return nil
 }
+func (this *GetAllAdvisorsRequest) Validate() error {
+	return nil
+}
+func (this *GetAllAdvisorsResponse) Validate() error {
+	return nil
+}
 func (this *GetAllAlertRuleTemplatesRequest) Validate() error {
 	return nil
 }

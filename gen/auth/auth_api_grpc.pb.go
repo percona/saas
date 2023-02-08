@@ -41,6 +41,8 @@ type AuthAPIClient interface {
 	UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...grpc.CallOption) (*UpdateProfileResponse, error)
 	// UpdateProfile updates user's first name and last name.
 	ActivateProfile(ctx context.Context, in *ActivateProfileRequest, opts ...grpc.CallOption) (*ActivateProfileResponse, error)
+	// ValidateToken validates a one-time activationToken and returns 5-min living stateToken
+	ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*ValidateTokenResponse, error)
 }
 
 type authAPIClient struct {
@@ -132,6 +134,15 @@ func (c *authAPIClient) ActivateProfile(ctx context.Context, in *ActivateProfile
 	return out, nil
 }
 
+func (c *authAPIClient) ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*ValidateTokenResponse, error) {
+	out := new(ValidateTokenResponse)
+	err := c.cc.Invoke(ctx, "/percona.platform.auth.v1.AuthAPI/ValidateToken", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthAPIServer is the server API for AuthAPI service.
 // All implementations must embed UnimplementedAuthAPIServer
 // for forward compatibility
@@ -154,6 +165,8 @@ type AuthAPIServer interface {
 	UpdateProfile(context.Context, *UpdateProfileRequest) (*UpdateProfileResponse, error)
 	// UpdateProfile updates user's first name and last name.
 	ActivateProfile(context.Context, *ActivateProfileRequest) (*ActivateProfileResponse, error)
+	// ValidateToken validates a one-time activationToken and returns 5-min living stateToken
+	ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error)
 	mustEmbedUnimplementedAuthAPIServer()
 }
 
@@ -187,6 +200,9 @@ func (UnimplementedAuthAPIServer) UpdateProfile(context.Context, *UpdateProfileR
 }
 func (UnimplementedAuthAPIServer) ActivateProfile(context.Context, *ActivateProfileRequest) (*ActivateProfileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ActivateProfile not implemented")
+}
+func (UnimplementedAuthAPIServer) ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidateToken not implemented")
 }
 func (UnimplementedAuthAPIServer) mustEmbedUnimplementedAuthAPIServer() {}
 
@@ -363,6 +379,24 @@ func _AuthAPI_ActivateProfile_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthAPI_ValidateToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ValidateTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthAPIServer).ValidateToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/percona.platform.auth.v1.AuthAPI/ValidateToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthAPIServer).ValidateToken(ctx, req.(*ValidateTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthAPI_ServiceDesc is the grpc.ServiceDesc for AuthAPI service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -405,6 +439,10 @@ var AuthAPI_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ActivateProfile",
 			Handler:    _AuthAPI_ActivateProfile_Handler,
+		},
+		{
+			MethodName: "ValidateToken",
+			Handler:    _AuthAPI_ValidateToken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

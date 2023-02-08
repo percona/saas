@@ -39,10 +39,10 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
-// RetrievalAPI provides API for retrieving Security Threat Tool checks
-// and Integrated Alerting rules from Percona Check Service.
+// RetrievalAPI provides API for retrieving advisor checks
+// and alerting rule templates from Percona Check Service.
 service RetrievalAPI {
-  // GetAllChecks returns all available STT checks.
+  // GetAllChecks returns all available checks.
   rpc GetAllChecks(GetAllChecksRequest) returns (GetAllChecksResponse) {
     option (google.api.http) = {
       post: "/v1/check/GetAllChecks"
@@ -51,6 +51,19 @@ service RetrievalAPI {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "Retrieves all check scripts a user is entitled to according to the tier.";
       summary: "Get all checks";
+      consumes: ["application/json"];
+      produces: ["application/json"];
+    };
+  }
+  // GetAllChecks returns all available advisors.
+  rpc GetAllAdvisors(GetAllAdvisorsRequest) returns (GetAllAdvisorsResponse) {
+    option (google.api.http) = {
+      post: "/v1/check/GetAllAdvisors"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Retrieves all advisors a user is entitled to according to the tier.";
+      summary: "Get all advisors";
       consumes: ["application/json"];
       produces: ["application/json"];
     };
@@ -73,6 +86,15 @@ service RetrievalAPI {
 message GetAllChecksRequest {}
 
 message GetAllChecksResponse {
+  // YAML formatted checks.
+  string file = 1;
+  // Checks signatures.
+  repeated string signatures = 2;
+}
+
+message GetAllAdvisorsRequest {}
+
+message GetAllAdvisorsResponse {
   // YAML formatted checks.
   string file = 1;
   // Checks signatures.

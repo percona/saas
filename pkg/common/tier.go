@@ -28,7 +28,7 @@ func (t Tier) Validate() error {
 	return nil
 }
 
-// ValidateTiers validates tiers and checks for duplicates.
+// ValidateTiers validates tiers and checks them for duplicates.
 func ValidateTiers(tiers []Tier) error {
 	m := make(map[Tier]struct{}, len(tiers))
 	for _, tier := range tiers {
