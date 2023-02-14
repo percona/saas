@@ -60,7 +60,7 @@ func ParseAdvisors(reader io.Reader, params *ParseParams) ([]Advisor, error) {
 }
 
 // Validate advisor.
-func (a *Advisor) Validate() error {
+func (a *Advisor) Validate() error { //nolint:cyclop
 	if a.Version != 1 {
 		return errors.Errorf("unexpected version %d", a.Version)
 	}
@@ -85,10 +85,22 @@ func (a *Advisor) Validate() error {
 		return err
 	}
 
+	checkNames := make(map[string]struct{}, len(a.Checks))
 	for _, check := range a.Checks {
 		if err := check.Validate(); err != nil {
 			return err
 		}
+
+		if check.Advisor != a.Name {
+			return errors.Errorf("advisor name '%s' doesn't match name '%s' specified in corresponding advisor '%s'",
+				a.Name, check.Advisor, check.Name,
+			)
+		}
+
+		if _, ok := checkNames[check.Name]; ok {
+			return errors.Errorf("check name collision `%s` detected in '%s' advisor", check.Name, a.Name)
+		}
+		checkNames[check.Name] = struct{}{}
 	}
 
 	return nil

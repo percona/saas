@@ -126,7 +126,7 @@ func ParseChecks(reader io.Reader, params *ParseParams) ([]Check, error) {
 	}
 }
 
-// Supported check types.
+// Supported query types.
 const (
 	MySQLShow                = Type("MYSQL_SHOW")
 	MySQLSelect              = Type("MYSQL_SELECT")
@@ -141,10 +141,10 @@ const (
 	MetricsRange             = Type("METRICS_RANGE")
 )
 
-// Type represents check type.
+// Type represents query type.
 type Type string
 
-// Validate validates check type.
+// Validate validates query type.
 func (t Type) Validate() error { //nolint:cyclop
 	switch t {
 	case MySQLShow:
