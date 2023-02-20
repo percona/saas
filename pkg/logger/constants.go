@@ -7,4 +7,6 @@ const (
 	UserIDAttr = "userID"
 	// AppIDAttr attribute name for application ID field in log record.
 	AppIDAttr = "appID"
+	// HookAttr attribute name hook field in log record.
+	HookAttr = "hook"
 )

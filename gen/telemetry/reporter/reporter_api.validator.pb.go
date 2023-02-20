@@ -13,8 +13,10 @@ import (
 	github_com_mwitkow_go_proto_validators "github.com/mwitkow/go-proto-validators"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	_ "google.golang.org/protobuf/types/known/durationpb"
+	_ "google.golang.org/protobuf/types/known/timestamppb"
 
 	_ "github.com/percona-platform/saas/gen/telemetry/events/pmm"
+	_ "github.com/percona-platform/saas/gen/utils/fsp"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -40,5 +42,56 @@ func (this *ReportRequest) Validate() error {
 	return nil
 }
 func (this *ReportResponse) Validate() error {
+	return nil
+}
+func (this *PMMServerMetric) Validate() error {
+	return nil
+}
+func (this *PMMMetricEvent) Validate() error {
+	if this.EventTime != nil {
+		if err := github_com_mwitkow_go_proto_validators.CallValidatorIfExists(this.EventTime); err != nil {
+			return github_com_mwitkow_go_proto_validators.FieldError("EventTime", err)
+		}
+	}
+	for _, item := range this.Metrics {
+		if item != nil {
+			if err := github_com_mwitkow_go_proto_validators.CallValidatorIfExists(item); err != nil {
+				return github_com_mwitkow_go_proto_validators.FieldError("Metrics", err)
+			}
+		}
+	}
+	return nil
+}
+func (this *SearchEventRequest) Validate() error {
+	if this.StartsAt != nil {
+		if err := github_com_mwitkow_go_proto_validators.CallValidatorIfExists(this.StartsAt); err != nil {
+			return github_com_mwitkow_go_proto_validators.FieldError("StartsAt", err)
+		}
+	}
+	if this.EndsAt != nil {
+		if err := github_com_mwitkow_go_proto_validators.CallValidatorIfExists(this.EndsAt); err != nil {
+			return github_com_mwitkow_go_proto_validators.FieldError("EndsAt", err)
+		}
+	}
+	if this.PageParams != nil {
+		if err := github_com_mwitkow_go_proto_validators.CallValidatorIfExists(this.PageParams); err != nil {
+			return github_com_mwitkow_go_proto_validators.FieldError("PageParams", err)
+		}
+	}
+	return nil
+}
+func (this *SearchEventResponse) Validate() error {
+	for _, item := range this.Events {
+		if item != nil {
+			if err := github_com_mwitkow_go_proto_validators.CallValidatorIfExists(item); err != nil {
+				return github_com_mwitkow_go_proto_validators.FieldError("Events", err)
+			}
+		}
+	}
+	if this.PageTotals != nil {
+		if err := github_com_mwitkow_go_proto_validators.CallValidatorIfExists(this.PageTotals); err != nil {
+			return github_com_mwitkow_go_proto_validators.FieldError("PageTotals", err)
+		}
+	}
 	return nil
 }

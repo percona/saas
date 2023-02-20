@@ -130,6 +130,7 @@ const (
 	MongoDBGetDiagnosticData = Type("MONGODB_GETDIAGNOSTICDATA")
 	MetricsInstant           = Type("METRICS_INSTANT")
 	MetricsRange             = Type("METRICS_RANGE")
+	ClickHouseSelect         = Type("CLICKHOUSE_SELECT")
 )
 
 // Type represents check type.
@@ -156,6 +157,8 @@ func (t Type) Validate() error { //nolint:cyclop
 		fallthrough
 	case MongoDBGetDiagnosticData:
 		fallthrough
+	case ClickHouseSelect:
+		return nil
 	case MetricsInstant:
 		fallthrough
 	case MetricsRange:
@@ -374,6 +377,7 @@ func validateQuery(typ Type, query string) error { //nolint:cyclop
 		fallthrough
 	case MySQLSelect:
 		fallthrough
+	case ClickHouseSelect:
 	case MetricsInstant:
 		fallthrough
 	case MetricsRange:
@@ -479,7 +483,7 @@ func (c *Check) validateQueries() error {
 	case PostgreSQL:
 		return checkQueryForCompatibilityWithPostgreSQLFamily(c.Queries)
 	case MongoDB:
-		return checkQueryForCompatibilityWithMonogDBFamily(c.Queries)
+		return checkQueryCompatibilityWithMongoDBFamily(c.Queries)
 	default:
 		return errors.Errorf("unknown check family: %s", c.Family)
 	}
@@ -515,7 +519,7 @@ func checkQueryForCompatibilityWithPostgreSQLFamily(queries []Query) error {
 	return nil
 }
 
-func checkQueryForCompatibilityWithMonogDBFamily(queries []Query) error {
+func checkQueryCompatibilityWithMongoDBFamily(queries []Query) error {
 	for _, q := range queries {
 		switch q.Type { //nolint:exhaustive
 		case MongoDBGetParameter:
