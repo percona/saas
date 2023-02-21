@@ -496,6 +496,7 @@ func checkQueryForCompatibilityWithMySQLFamily(queries []Query) error {
 		case MySQLSelect:
 		case MetricsInstant:
 		case MetricsRange:
+		case ClickHouseSelect:
 		default:
 			return errors.Errorf("unsupported query type '%s' for mySQL family", q.Type)
 		}
@@ -511,6 +512,7 @@ func checkQueryForCompatibilityWithPostgreSQLFamily(queries []Query) error {
 		case PostgreSQLSelect:
 		case MetricsInstant:
 		case MetricsRange:
+		case ClickHouseSelect:
 		default:
 			return errors.Errorf("unsupported query type '%s' for postgreSQL family", q.Type)
 		}
@@ -529,6 +531,7 @@ func checkQueryCompatibilityWithMongoDBFamily(queries []Query) error {
 		case MongoDBReplSetGetStatus:
 		case MetricsInstant:
 		case MetricsRange:
+		case ClickHouseSelect:
 		default:
 			return errors.Errorf("unsupported query type '%s' for mongoDB family", q.Type)
 		}
