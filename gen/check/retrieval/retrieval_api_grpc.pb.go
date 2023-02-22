@@ -25,9 +25,9 @@ const _ = grpc.SupportPackageIsVersion7
 type RetrievalAPIClient interface {
 	// GetAllChecks returns all available checks.
 	GetAllChecks(ctx context.Context, in *GetAllChecksRequest, opts ...grpc.CallOption) (*GetAllChecksResponse, error)
-	// GetAllChecks returns all available advisors.
+	// GetAllAdvisors returns all available advisors.
 	GetAllAdvisors(ctx context.Context, in *GetAllAdvisorsRequest, opts ...grpc.CallOption) (*GetAllAdvisorsResponse, error)
-	// GetAllAlertRuleTemplates returns all available IA rule templates.
+	// GetAllAlertRuleTemplates returns all available alert rule templates.
 	GetAllAlertRuleTemplates(ctx context.Context, in *GetAllAlertRuleTemplatesRequest, opts ...grpc.CallOption) (*GetAllAlertRuleTemplatesResponse, error)
 }
 
@@ -72,9 +72,9 @@ func (c *retrievalAPIClient) GetAllAlertRuleTemplates(ctx context.Context, in *G
 type RetrievalAPIServer interface {
 	// GetAllChecks returns all available checks.
 	GetAllChecks(context.Context, *GetAllChecksRequest) (*GetAllChecksResponse, error)
-	// GetAllChecks returns all available advisors.
+	// GetAllAdvisors returns all available advisors.
 	GetAllAdvisors(context.Context, *GetAllAdvisorsRequest) (*GetAllAdvisorsResponse, error)
-	// GetAllAlertRuleTemplates returns all available IA rule templates.
+	// GetAllAlertRuleTemplates returns all available alert rule templates.
 	GetAllAlertRuleTemplates(context.Context, *GetAllAlertRuleTemplatesRequest) (*GetAllAlertRuleTemplatesResponse, error)
 	mustEmbedUnimplementedRetrievalAPIServer()
 }

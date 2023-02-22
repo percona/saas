@@ -66,9 +66,9 @@ type GetAllChecksResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// YAML formatted checks.
+	// List of advisor checks in YAML format.
 	File string `protobuf:"bytes,1,opt,name=file,proto3" json:"file,omitempty"`
-	// Checks signatures.
+	// File signatures.
 	Signatures []string `protobuf:"bytes,2,rep,name=signatures,proto3" json:"signatures,omitempty"`
 }
 
@@ -161,9 +161,9 @@ type GetAllAdvisorsResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// YAML formatted checks.
+	// List of advisors in YAML format.
 	File string `protobuf:"bytes,1,opt,name=file,proto3" json:"file,omitempty"`
-	// Checks signatures.
+	// File signatures.
 	Signatures []string `protobuf:"bytes,2,rep,name=signatures,proto3" json:"signatures,omitempty"`
 }
 
@@ -256,9 +256,9 @@ type GetAllAlertRuleTemplatesResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// YAML formatted rules.
+	// List of alert rule templates in YAML format.
 	File string `protobuf:"bytes,1,opt,name=file,proto3" json:"file,omitempty"`
-	// Rules signatures.
+	// File signatures.
 	Signatures []string `protobuf:"bytes,2,rep,name=signatures,proto3" json:"signatures,omitempty"`
 }
 

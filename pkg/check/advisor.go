@@ -9,7 +9,7 @@ import (
 	"github.com/percona-platform/saas/pkg/common"
 )
 
-// Advisor represents advisor structure.
+// Advisor represents group of checks with the common idea.
 type Advisor struct {
 	Version     uint32        `yaml:"version"`
 	Name        string        `yaml:"name"`
@@ -22,7 +22,7 @@ type Advisor struct {
 
 // ParseAdvisors returns a slice of validated advisors parsed from YAML passed via a reader.
 // It can handle multi-document YAMLs: parsing result will be a single slice
-// that contains advisors form every parsed document.
+// that contains advisors from every parsed document.
 func ParseAdvisors(reader io.Reader, params *ParseParams) ([]Advisor, error) {
 	if params == nil {
 		params = new(ParseParams)
@@ -92,7 +92,7 @@ func (a *Advisor) Validate() error { //nolint:cyclop
 		}
 
 		if check.Advisor != a.Name {
-			return errors.Errorf("advisor name '%s' doesn't match name '%s' specified in corresponding advisor '%s'",
+			return errors.Errorf("advisor name '%s' doesn't match name '%s' specified in corresponding check '%s'",
 				a.Name, check.Advisor, check.Name,
 			)
 		}

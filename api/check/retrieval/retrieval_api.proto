@@ -55,7 +55,7 @@ service RetrievalAPI {
       produces: ["application/json"];
     };
   }
-  // GetAllChecks returns all available advisors.
+  // GetAllAdvisors returns all available advisors.
   rpc GetAllAdvisors(GetAllAdvisorsRequest) returns (GetAllAdvisorsResponse) {
     option (google.api.http) = {
       post: "/v1/check/GetAllAdvisors"
@@ -68,7 +68,7 @@ service RetrievalAPI {
       produces: ["application/json"];
     };
   }
-  // GetAllAlertRuleTemplates returns all available IA rule templates.
+  // GetAllAlertRuleTemplates returns all available alert rule templates.
   rpc GetAllAlertRuleTemplates(GetAllAlertRuleTemplatesRequest) returns (GetAllAlertRuleTemplatesResponse) {
     option (google.api.http) = {
       post: "/v1/check/GetAllAlertRuleTemplates"
@@ -86,26 +86,26 @@ service RetrievalAPI {
 message GetAllChecksRequest {}
 
 message GetAllChecksResponse {
-  // YAML formatted checks.
+  // List of advisor checks in YAML format.
   string file = 1;
-  // Checks signatures.
+  // File signatures.
   repeated string signatures = 2;
 }
 
 message GetAllAdvisorsRequest {}
 
 message GetAllAdvisorsResponse {
-  // YAML formatted checks.
+  // List of advisors in YAML format.
   string file = 1;
-  // Checks signatures.
+  // File signatures.
   repeated string signatures = 2;
 }
 
 message GetAllAlertRuleTemplatesRequest {}
 
 message GetAllAlertRuleTemplatesResponse {
-  // YAML formatted rules.
+  // List of alert rule templates in YAML format.
   string file = 1;
-  // Rules signatures.
+  // File signatures.
   repeated string signatures = 2;
 }

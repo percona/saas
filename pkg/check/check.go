@@ -81,7 +81,7 @@ type ParseParams struct {
 
 // Parse returns a slice of validated checks parsed from YAML passed via a reader.
 // It can handle multi-document YAMLs: parsing result will be a single slice
-// that contains checks form every parsed document.
+// that contains checks from every parsed document.
 // Deprecated: use ParseChecks instead.
 func Parse(reader io.Reader, params *ParseParams) ([]Check, error) {
 	return ParseChecks(reader, params)
@@ -89,7 +89,7 @@ func Parse(reader io.Reader, params *ParseParams) ([]Check, error) {
 
 // ParseChecks returns a slice of validated checks parsed from YAML passed via a reader.
 // It can handle multi-document YAMLs: parsing result will be a single slice
-// that contains checks form every parsed document.
+// that contains checks from every parsed document.
 func ParseChecks(reader io.Reader, params *ParseParams) ([]Check, error) {
 	if params == nil {
 		params = new(ParseParams)
