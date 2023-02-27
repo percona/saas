@@ -167,7 +167,7 @@ func (t Type) Validate() error { //nolint:cyclop
 	case MongoDBGetDiagnosticData:
 		fallthrough
 	case ClickHouseSelect:
-		return nil
+		fallthrough
 	case MetricsInstant:
 		fallthrough
 	case MetricsRange:
@@ -379,6 +379,7 @@ func validateQuery(typ Type, query string) error { //nolint:cyclop
 	case MySQLSelect:
 		fallthrough
 	case ClickHouseSelect:
+		fallthrough
 	case MetricsInstant:
 		fallthrough
 	case MetricsRange:
