@@ -39,10 +39,10 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
-// RetrievalAPI provides API for retrieving Security Threat Tool checks
-// and Integrated Alerting rules from Percona Check Service.
+// RetrievalAPI provides API for retrieving advisor checks
+// and alerting rule templates from Percona Check Service.
 service RetrievalAPI {
-  // GetAllChecks returns all available STT checks.
+  // GetAllChecks returns all available checks.
   rpc GetAllChecks(GetAllChecksRequest) returns (GetAllChecksResponse) {
     option (google.api.http) = {
       post: "/v1/check/GetAllChecks"
@@ -55,7 +55,20 @@ service RetrievalAPI {
       produces: ["application/json"];
     };
   }
-  // GetAllAlertRuleTemplates returns all available IA rule templates.
+  // GetAllAdvisors returns all available advisors.
+  rpc GetAllAdvisors(GetAllAdvisorsRequest) returns (GetAllAdvisorsResponse) {
+    option (google.api.http) = {
+      post: "/v1/check/GetAllAdvisors"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Retrieves all advisors a user is entitled to according to the tier.";
+      summary: "Get all advisors";
+      consumes: ["application/json"];
+      produces: ["application/json"];
+    };
+  }
+  // GetAllAlertRuleTemplates returns all available alert rule templates.
   rpc GetAllAlertRuleTemplates(GetAllAlertRuleTemplatesRequest) returns (GetAllAlertRuleTemplatesResponse) {
     option (google.api.http) = {
       post: "/v1/check/GetAllAlertRuleTemplates"
@@ -73,17 +86,26 @@ service RetrievalAPI {
 message GetAllChecksRequest {}
 
 message GetAllChecksResponse {
-  // YAML formatted checks.
+  // List of advisor checks in YAML format.
   string file = 1;
-  // Checks signatures.
+  // File signatures.
+  repeated string signatures = 2;
+}
+
+message GetAllAdvisorsRequest {}
+
+message GetAllAdvisorsResponse {
+  // List of advisors in YAML format.
+  string file = 1;
+  // File signatures.
   repeated string signatures = 2;
 }
 
 message GetAllAlertRuleTemplatesRequest {}
 
 message GetAllAlertRuleTemplatesResponse {
-  // YAML formatted rules.
+  // List of alert rule templates in YAML format.
   string file = 1;
-  // Rules signatures.
+  // File signatures.
   repeated string signatures = 2;
 }

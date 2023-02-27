@@ -23,9 +23,11 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RetrievalAPIClient interface {
-	// GetAllChecks returns all available STT checks.
+	// GetAllChecks returns all available checks.
 	GetAllChecks(ctx context.Context, in *GetAllChecksRequest, opts ...grpc.CallOption) (*GetAllChecksResponse, error)
-	// GetAllAlertRuleTemplates returns all available IA rule templates.
+	// GetAllAdvisors returns all available advisors.
+	GetAllAdvisors(ctx context.Context, in *GetAllAdvisorsRequest, opts ...grpc.CallOption) (*GetAllAdvisorsResponse, error)
+	// GetAllAlertRuleTemplates returns all available alert rule templates.
 	GetAllAlertRuleTemplates(ctx context.Context, in *GetAllAlertRuleTemplatesRequest, opts ...grpc.CallOption) (*GetAllAlertRuleTemplatesResponse, error)
 }
 
@@ -46,6 +48,15 @@ func (c *retrievalAPIClient) GetAllChecks(ctx context.Context, in *GetAllChecksR
 	return out, nil
 }
 
+func (c *retrievalAPIClient) GetAllAdvisors(ctx context.Context, in *GetAllAdvisorsRequest, opts ...grpc.CallOption) (*GetAllAdvisorsResponse, error) {
+	out := new(GetAllAdvisorsResponse)
+	err := c.cc.Invoke(ctx, "/percona.platform.check.retrieval.v1.RetrievalAPI/GetAllAdvisors", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *retrievalAPIClient) GetAllAlertRuleTemplates(ctx context.Context, in *GetAllAlertRuleTemplatesRequest, opts ...grpc.CallOption) (*GetAllAlertRuleTemplatesResponse, error) {
 	out := new(GetAllAlertRuleTemplatesResponse)
 	err := c.cc.Invoke(ctx, "/percona.platform.check.retrieval.v1.RetrievalAPI/GetAllAlertRuleTemplates", in, out, opts...)
@@ -59,9 +70,11 @@ func (c *retrievalAPIClient) GetAllAlertRuleTemplates(ctx context.Context, in *G
 // All implementations must embed UnimplementedRetrievalAPIServer
 // for forward compatibility
 type RetrievalAPIServer interface {
-	// GetAllChecks returns all available STT checks.
+	// GetAllChecks returns all available checks.
 	GetAllChecks(context.Context, *GetAllChecksRequest) (*GetAllChecksResponse, error)
-	// GetAllAlertRuleTemplates returns all available IA rule templates.
+	// GetAllAdvisors returns all available advisors.
+	GetAllAdvisors(context.Context, *GetAllAdvisorsRequest) (*GetAllAdvisorsResponse, error)
+	// GetAllAlertRuleTemplates returns all available alert rule templates.
 	GetAllAlertRuleTemplates(context.Context, *GetAllAlertRuleTemplatesRequest) (*GetAllAlertRuleTemplatesResponse, error)
 	mustEmbedUnimplementedRetrievalAPIServer()
 }
@@ -72,6 +85,9 @@ type UnimplementedRetrievalAPIServer struct {
 
 func (UnimplementedRetrievalAPIServer) GetAllChecks(context.Context, *GetAllChecksRequest) (*GetAllChecksResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllChecks not implemented")
+}
+func (UnimplementedRetrievalAPIServer) GetAllAdvisors(context.Context, *GetAllAdvisorsRequest) (*GetAllAdvisorsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllAdvisors not implemented")
 }
 func (UnimplementedRetrievalAPIServer) GetAllAlertRuleTemplates(context.Context, *GetAllAlertRuleTemplatesRequest) (*GetAllAlertRuleTemplatesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllAlertRuleTemplates not implemented")
@@ -107,6 +123,24 @@ func _RetrievalAPI_GetAllChecks_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RetrievalAPI_GetAllAdvisors_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllAdvisorsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RetrievalAPIServer).GetAllAdvisors(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/percona.platform.check.retrieval.v1.RetrievalAPI/GetAllAdvisors",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RetrievalAPIServer).GetAllAdvisors(ctx, req.(*GetAllAdvisorsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _RetrievalAPI_GetAllAlertRuleTemplates_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetAllAlertRuleTemplatesRequest)
 	if err := dec(in); err != nil {
@@ -135,6 +169,10 @@ var RetrievalAPI_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAllChecks",
 			Handler:    _RetrievalAPI_GetAllChecks_Handler,
+		},
+		{
+			MethodName: "GetAllAdvisors",
+			Handler:    _RetrievalAPI_GetAllAdvisors_Handler,
 		},
 		{
 			MethodName: "GetAllAlertRuleTemplates",

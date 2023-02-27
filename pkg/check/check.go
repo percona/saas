@@ -13,9 +13,10 @@ import (
 	"github.com/pkg/errors"
 	"golang.org/x/crypto/blake2b"
 	"gopkg.in/yaml.v3"
-
-	"github.com/percona-platform/saas/pkg/common"
 )
+
+// The same as Prometheus label format.
+var nameRE = regexp.MustCompile(`^[a-zA-Z_][a-zA-Z0-9_]*$`)
 
 // Verify checks signature of passed data with provided public key and
 // returns error in case of any problem.
@@ -80,8 +81,16 @@ type ParseParams struct {
 
 // Parse returns a slice of validated checks parsed from YAML passed via a reader.
 // It can handle multi-document YAMLs: parsing result will be a single slice
-// that contains checks form every parsed document.
+// that contains checks from every parsed document.
+// Deprecated: use ParseChecks instead.
 func Parse(reader io.Reader, params *ParseParams) ([]Check, error) {
+	return ParseChecks(reader, params)
+}
+
+// ParseChecks returns a slice of validated checks parsed from YAML passed via a reader.
+// It can handle multi-document YAMLs: parsing result will be a single slice
+// that contains checks from every parsed document.
+func ParseChecks(reader io.Reader, params *ParseParams) ([]Check, error) {
 	if params == nil {
 		params = new(ParseParams)
 	}
@@ -117,7 +126,7 @@ func Parse(reader io.Reader, params *ParseParams) ([]Check, error) {
 	}
 }
 
-// Supported check types.
+// Supported query types.
 const (
 	MySQLShow                = Type("MYSQL_SHOW")
 	MySQLSelect              = Type("MYSQL_SELECT")
@@ -133,10 +142,10 @@ const (
 	ClickHouseSelect         = Type("CLICKHOUSE_SELECT")
 )
 
-// Type represents check type.
+// Type represents query type.
 type Type string
 
-// Validate validates check type.
+// Validate validates query type.
 func (t Type) Validate() error { //nolint:cyclop
 	switch t {
 	case MySQLShow:
@@ -239,24 +248,21 @@ type Query struct {
 	Parameters map[Parameter]string
 }
 
-// Check represents security check structure. Fields marked with v1 should not be used for version 2, and vice versa.
+// Check represents advisor check structure. Fields marked with v1 should not be used for version 2, and vice versa.
 type Check struct {
-	Version     uint32        `yaml:"version"`
-	Name        string        `yaml:"name"`
-	Summary     string        `yaml:"summary"`
-	Description string        `yaml:"description"`
-	Type        Type          `yaml:"type,omitempty"`     // for v1
-	Category    string        `yaml:"category,omitempty"` // optional for v1, required for v2
-	Family      Family        `yaml:"family,omitempty"`   // for v2
-	Tiers       []common.Tier `yaml:"tiers,flow,omitempty"`
-	Interval    Interval      `yaml:"interval,omitempty"`
-	Query       string        `yaml:"query,omitempty"`   // for v1
-	Queries     []Query       `yaml:"queries,omitempty"` // for v2
-	Script      string        `yaml:"script"`
+	Version     uint32   `yaml:"version"`
+	Name        string   `yaml:"name"`
+	Summary     string   `yaml:"summary"`
+	Description string   `yaml:"description"`
+	Advisor     string   `yaml:"advisor"`
+	Category    string   `yaml:"category,omitempty"` // deprecated
+	Type        Type     `yaml:"type,omitempty"`     // for v1
+	Family      Family   `yaml:"family,omitempty"`   // for v2
+	Interval    Interval `yaml:"interval,omitempty"`
+	Query       string   `yaml:"query,omitempty"`   // for v1
+	Queries     []Query  `yaml:"queries,omitempty"` // for v2
+	Script      string   `yaml:"script"`
 }
-
-// The same as Prometheus label format.
-var nameRE = regexp.MustCompile(`^[a-zA-Z_][a-zA-Z0-9_]*$`)
 
 // Validate validates check for minimal correctness.
 func (c *Check) Validate() error { //nolint: cyclop
@@ -264,10 +270,6 @@ func (c *Check) Validate() error { //nolint: cyclop
 
 	if !nameRE.MatchString(c.Name) {
 		return errors.New("invalid check name")
-	}
-
-	if err = common.ValidateTiers(c.Tiers); err != nil {
-		return err
 	}
 
 	if err = c.Interval.Validate(); err != nil {
@@ -288,6 +290,10 @@ func (c *Check) Validate() error { //nolint: cyclop
 
 	if c.Description == "" {
 		return errors.New("description is empty")
+	}
+
+	if c.Advisor == "" {
+		return errors.New("advisor name is missing")
 	}
 
 	switch c.Version {
@@ -337,11 +343,6 @@ func (c *Check) validateV2() error {
 
 	if c.Query != "" {
 		return errors.New("field 'query' is part of check format version 1 and can't be used in version 2")
-	}
-
-	// category is optional for v1 so that existing checks can continue working, but we make it required for v2.
-	if c.Category == "" {
-		return errors.New("category is empty")
 	}
 
 	return nil
