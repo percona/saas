@@ -415,8 +415,6 @@ func validateQueryParameters(typ Type, params map[Parameter]string) error { //no
 		return validateParametersForMetricsInstantQuery(params)
 	case MetricsRange:
 		return validateParametersForMetricsRangeQuery(params)
-	case ClickHouseSelect:
-		return validateParametersForClickhouseQuery(params)
 	}
 
 	return nil
@@ -426,20 +424,6 @@ func validateParametersForMetricsInstantQuery(params map[Parameter]string) error
 	for param, value := range params {
 		if param != Lookback {
 			return errors.Errorf("unsupported parameter '%s' for instant metris query", param)
-		}
-
-		if _, err := time.ParseDuration(value); err != nil {
-			return errors.Wrapf(err, "failed to parse loopback parameter value '%s', it should be a duration", value)
-		}
-	}
-
-	return nil
-}
-
-func validateParametersForClickhouseQuery(params map[Parameter]string) error {
-	for param, value := range params {
-		if param != Lookback {
-			return errors.Errorf("unsupported parameter '%s' for clickhouse query", param)
 		}
 
 		if _, err := time.ParseDuration(value); err != nil {
