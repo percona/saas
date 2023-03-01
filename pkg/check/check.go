@@ -7,6 +7,7 @@ import (
 	"encoding/base64"
 	"io"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -236,6 +237,7 @@ const (
 	Lookback = Parameter("lookback")
 	Range    = Parameter("range")
 	Step     = Parameter("step")
+	AllDBs   = Parameter("all_dbs")
 )
 
 // Query represents DB query of specified type.
@@ -388,8 +390,6 @@ func validateQuery(typ Type, query string) error { //nolint:cyclop
 
 func validateQueryParameters(typ Type, params map[Parameter]string) error { //nolint:cyclop
 	switch typ {
-	case PostgreSQLShow:
-		fallthrough
 	case MongoDBGetParameter:
 		fallthrough
 	case MongoDBBuildInfo:
@@ -400,18 +400,37 @@ func validateQueryParameters(typ Type, params map[Parameter]string) error { //no
 		fallthrough
 	case MongoDBGetDiagnosticData:
 		fallthrough
-	case PostgreSQLSelect:
-		fallthrough
 	case MySQLShow:
 		fallthrough
 	case MySQLSelect:
 		if len(params) != 0 {
 			return errors.Errorf("query for '%s' type should not have any parameters", typ)
 		}
+
+	case PostgreSQLShow:
+		fallthrough
+	case PostgreSQLSelect:
+		return validateParametersForPostgreSQLQuery(params)
+
 	case MetricsInstant:
 		return validateParametersForMetricsInstantQuery(params)
 	case MetricsRange:
 		return validateParametersForMetricsRangeQuery(params)
+	}
+
+	return nil
+}
+
+func validateParametersForPostgreSQLQuery(params map[Parameter]string) error {
+	for param, value := range params {
+		switch param {
+		case AllDBs:
+			if _, err := strconv.ParseBool(value); err != nil {
+				return errors.Wrapf(err, "failed to parse '%s' parameter value %s, it should be a boolean", param, value)
+			}
+		default:
+			return errors.Errorf("unsupported parameter '%s' for postgreSQL query", param)
+		}
 	}
 
 	return nil
