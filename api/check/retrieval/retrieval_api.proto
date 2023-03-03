@@ -2,35 +2,24 @@ syntax = "proto3";
 
 package percona.platform.check.retrieval.v1;
 
-option go_package = "/check/retrieval;retrievalv1";
-
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
+option go_package = "/check/retrieval;retrievalv1";
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
-  info: {
-    title: "Retrieval API";
-  };
+  info: {title: "Retrieval API"};
   extensions: {
     key: "x-readme";
-    value:{
+    value: {
       struct_value: {
         fields: {
           key: "samples-languages"
           value: {
             list_value: {
-              values: {
-                string_value: "curl";
-              }
-              values: {
-                string_value: "go";
-              }
-              values: {
-                string_value: "node";
-              }
-              values: {
-                string_value: "python";
-              }
+              values: {string_value: "curl"}
+              values: {string_value: "go"}
+              values: {string_value: "node"}
+              values: {string_value: "python"}
             }
           }
         }

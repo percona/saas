@@ -9,9 +9,7 @@ import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "/auth;authv1";
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
-  info: {
-    title: "Auth API";
-  };
+  info: {title: "Auth API"};
   extensions: {
     key: "x-readme";
     value: {
@@ -20,18 +18,10 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
           key: "samples-languages"
           value: {
             list_value: {
-              values: {
-                string_value: "curl";
-              }
-              values: {
-                string_value: "go";
-              }
-              values: {
-                string_value: "node";
-              }
-              values: {
-                string_value: "python";
-              }
+              values: {string_value: "curl"}
+              values: {string_value: "go"}
+              values: {string_value: "node"}
+              values: {string_value: "python"}
             }
           }
         }
@@ -51,12 +41,8 @@ service AuthAPI {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "SignUp creates new user with given email and password.";
       summary: "SignUp";
-      consumes: [
-        "application/json"
-      ];
-      produces: [
-        "application/json"
-      ];
+      consumes: ["application/json"];
+      produces: ["application/json"];
     };
   }
   // SignIn checks user authentication, creates session and returns session ID.
@@ -68,12 +54,8 @@ service AuthAPI {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "SignIn checks user authentication, creates session and returns session ID.";
       summary: "SignIn";
-      consumes: [
-        "application/json"
-      ];
-      produces: [
-        "application/json"
-      ];
+      consumes: ["application/json"];
+      produces: ["application/json"];
     };
   }
   // SignOut terminates user session.
@@ -85,12 +67,8 @@ service AuthAPI {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "SignOut terminates user session.";
       summary: "SignOut";
-      consumes: [
-        "application/json"
-      ];
-      produces: [
-        "application/json"
-      ];
+      consumes: ["application/json"];
+      produces: ["application/json"];
     };
   }
   // RefreshSession refreshes session timeout.
@@ -102,12 +80,8 @@ service AuthAPI {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "RefreshSession refreshes session timeout.";
       summary: "RefreshSession";
-      consumes: [
-        "application/json"
-      ];
-      produces: [
-        "application/json"
-      ];
+      consumes: ["application/json"];
+      produces: ["application/json"];
     };
   }
   // ResetPassword initiates user's password reset procedure.
@@ -119,12 +93,8 @@ service AuthAPI {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "ResetPassword initiates user's password reset procedure.";
       summary: "ResetPassword";
-      consumes: [
-        "application/json"
-      ];
-      produces: [
-        "application/json"
-      ];
+      consumes: ["application/json"];
+      produces: ["application/json"];
     };
   }
   // GetProfile returns user's email, name and some additional information.
@@ -136,12 +106,8 @@ service AuthAPI {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "GetProfile returns user's email, name and some additional information.";
       summary: "GetProfile";
-      consumes: [
-        "application/json"
-      ];
-      produces: [
-        "application/json"
-      ];
+      consumes: ["application/json"];
+      produces: ["application/json"];
     };
   }
   // SearchUserProfile returns the requested user's profile data.
@@ -153,12 +119,8 @@ service AuthAPI {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "SearchUserProfile returns the requested user's profile data.";
       summary: "SearchUserProfile";
-      consumes: [
-        "application/json"
-      ];
-      produces: [
-        "application/json"
-      ];
+      consumes: ["application/json"];
+      produces: ["application/json"];
     };
   }
   // UpdateProfile updates user's first name and last name.
@@ -170,12 +132,8 @@ service AuthAPI {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "UpdateProfile updates user's first name and last name.";
       summary: "UpdateProfile";
-      consumes: [
-        "application/json"
-      ];
-      produces: [
-        "application/json"
-      ];
+      consumes: ["application/json"];
+      produces: ["application/json"];
     };
   }
 
@@ -188,12 +146,8 @@ service AuthAPI {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "ActivateProfile activates user account.";
       summary: "ActivateProfile";
-      consumes: [
-        "application/json"
-      ];
-      produces: [
-        "application/json"
-      ];
+      consumes: ["application/json"];
+      produces: ["application/json"];
     };
   }
 
@@ -206,22 +160,15 @@ service AuthAPI {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "Validates a one-time activationToken and returns 5-min living stateToken";
       summary: "ValidateToken";
-      consumes: [
-        "application/json"
-      ];
-      produces: [
-        "application/json"
-      ];
+      consumes: ["application/json"];
+      produces: ["application/json"];
     };
   }
-
 }
 
 message SignUpRequest {
   // User email.
-  string email = 1 [(validator.field) = {
-    string_not_empty: true
-  }];
+  string email = 1 [(validator.field) = {string_not_empty: true}];
   // User password.
   string password = 2 [deprecated = true];
   // User first name.
@@ -234,13 +181,9 @@ message SignUpResponse {}
 
 message SignInRequest {
   // User email.
-  string email = 1 [(validator.field) = {
-    string_not_empty: true
-  }];
+  string email = 1 [(validator.field) = {string_not_empty: true}];
   // User password.
-  string password = 2 [(validator.field) = {
-    string_not_empty: true
-  }];
+  string password = 2 [(validator.field) = {string_not_empty: true}];
 }
 
 message SignInResponse {
@@ -275,9 +218,7 @@ message RefreshSessionResponse {
 
 message ResetPasswordRequest {
   // User email.
-  string email = 1 [(validator.field) = {
-    string_not_empty: true
-  }];
+  string email = 1 [(validator.field) = {string_not_empty: true}];
 }
 
 message ResetPasswordResponse {}
@@ -299,9 +240,7 @@ message GetProfileResponse {
 
 message SearchUserProfileRequest {
   // Okta user ID whose profile is requested.
-  string okta_user_id = 1 [(validator.field) = {
-    string_not_empty: true
-  }];
+  string okta_user_id = 1 [(validator.field) = {string_not_empty: true}];
 }
 
 message SearchUserProfileResponse {
@@ -323,13 +262,9 @@ message SearchUserProfileResponse {
 
 message UpdateProfileRequest {
   // User first name.
-  string first_name = 1 [(validator.field) = {
-    string_not_empty: true
-  }];
+  string first_name = 1 [(validator.field) = {string_not_empty: true}];
   // User last name.
-  string last_name = 2 [(validator.field) = {
-    string_not_empty: true
-  }];
+  string last_name = 2 [(validator.field) = {string_not_empty: true}];
 
   // Flag shows if the Terms of Service are accepted
   optional bool tos = 3;
@@ -343,23 +278,15 @@ message UpdateProfileResponse {}
 message ActivateProfileRequest {
   Profile profile = 1;
 
-  string token = 2 [(validator.field) = {
-    string_not_empty: true
-  }];
+  string token = 2 [(validator.field) = {string_not_empty: true}];
 
-  string password = 3 [(validator.field) = {
-    string_not_empty: true
-  }];
+  string password = 3 [(validator.field) = {string_not_empty: true}];
 
   message Profile {
     // User first name.
-    string first_name = 1 [(validator.field) = {
-      string_not_empty: true
-    }];
+    string first_name = 1 [(validator.field) = {string_not_empty: true}];
     // User last name.
-    string last_name = 2 [(validator.field) = {
-      string_not_empty: true
-    }];
+    string last_name = 2 [(validator.field) = {string_not_empty: true}];
 
     // Flag shows if the Terms of Service are accepted
     optional bool tos = 3;
@@ -371,14 +298,10 @@ message ActivateProfileRequest {
 
 message ActivateProfileResponse {}
 
-
 message ValidateTokenRequest {
-  string activation_token = 1 [(validator.field) = {
-    string_not_empty: true
-  }];
+  string activation_token = 1 [(validator.field) = {string_not_empty: true}];
 }
 
 message ValidateTokenResponse {
   string state_token = 1;
 }
-
