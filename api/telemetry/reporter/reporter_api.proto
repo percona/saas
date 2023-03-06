@@ -2,41 +2,30 @@ syntax = "proto3";
 
 package percona.platform.telemetry.reporter.v1;
 
-option go_package = "/telemetry/reporter;reporterv1";
-
 import "github.com/mwitkow/go-proto-validators/validator.proto";
-import "telemetry/reporter/event.proto";
-import "telemetry/events/pmm/server_uptime_event.proto";
-import "google/protobuf/duration.proto";
 import "google/api/annotations.proto";
+import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
-import "utils/fsp/fsp.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
+import "telemetry/events/pmm/server_uptime_event.proto";
+import "telemetry/reporter/event.proto";
+import "utils/fsp/fsp.proto";
 
+option go_package = "/telemetry/reporter;reporterv1";
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
-  info: {
-    title: "Reporter API";
-  };
+  info: {title: "Reporter API"};
   extensions: {
     key: "x-readme";
-    value:{
+    value: {
       struct_value: {
         fields: {
           key: "samples-languages"
           value: {
             list_value: {
-              values: {
-                string_value: "curl";
-              }
-              values: {
-                string_value: "go";
-              }
-              values: {
-                string_value: "node";
-              }
-              values: {
-                string_value: "python";
-              }
+              values: {string_value: "curl"}
+              values: {string_value: "go"}
+              values: {string_value: "node"}
+              values: {string_value: "python"}
             }
           }
         }
@@ -74,8 +63,8 @@ service ReporterAPI {
   // Can only be used by SuperAdmins.
   rpc SearchEvent(SearchEventRequest) returns (SearchEventResponse) {
     option (google.api.http) = {
-        post: "/v1/telemetry/events:search"
-        body: "*"
+      post: "/v1/telemetry/events:search"
+      body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "SearchEvent searches for a specific metric in telemetry events and returns them to the client.";
