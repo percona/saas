@@ -7,6 +7,7 @@ import (
 	"encoding/base64"
 	"io"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -239,6 +240,7 @@ const (
 	Lookback = Parameter("lookback")
 	Range    = Parameter("range")
 	Step     = Parameter("step")
+	AllDBs   = Parameter("all_dbs")
 )
 
 // Query represents DB query of specified type.
@@ -405,18 +407,34 @@ func validateQueryParameters(typ Type, params map[Parameter]string) error { //no
 		fallthrough
 	case MongoDBGetDiagnosticData:
 		fallthrough
-	case PostgreSQLSelect:
-		fallthrough
 	case MySQLShow:
 		fallthrough
 	case MySQLSelect:
 		if len(params) != 0 {
 			return errors.Errorf("query for '%s' type should not have any parameters", typ)
 		}
+
+	case PostgreSQLSelect:
+		return validateParametersForPostgreSQLSelectQuery(params)
+
 	case MetricsInstant:
 		return validateParametersForMetricsInstantQuery(params)
 	case MetricsRange:
 		return validateParametersForMetricsRangeQuery(params)
+	}
+
+	return nil
+}
+
+func validateParametersForPostgreSQLSelectQuery(params map[Parameter]string) error {
+	for param, value := range params {
+		if param != AllDBs {
+			return errors.Errorf("unsupported parameter '%s' for postgreSQL select query", param)
+		}
+
+		if _, err := strconv.ParseBool(value); err != nil {
+			return errors.Wrapf(err, "failed to parse all_dbs parameter value %s, it should be a boolean", value)
+		}
 	}
 
 	return nil
