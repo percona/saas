@@ -266,6 +266,39 @@ type Check struct {
 	Script      string   `yaml:"script"`
 }
 
+// GetFamily returns check family for both V1 and V2 check formats.
+func (c *Check) GetFamily() Family {
+	switch c.Version {
+	case 1:
+		switch c.Type {
+		case MySQLSelect:
+			fallthrough
+		case MySQLShow:
+			return MySQL
+
+		case PostgreSQLSelect:
+			fallthrough
+		case PostgreSQLShow:
+			return PostgreSQL
+
+		case MongoDBGetParameter:
+			fallthrough
+		case MongoDBBuildInfo:
+			fallthrough
+		case MongoDBGetCmdLineOpts:
+			fallthrough
+		case MongoDBReplSetGetStatus:
+			fallthrough
+		case MongoDBGetDiagnosticData:
+			return MongoDB
+		}
+	case 2:
+		return c.Family
+	}
+
+	return ""
+}
+
 // Validate validates check for minimal correctness.
 func (c *Check) Validate() error { //nolint: cyclop
 	var err error
