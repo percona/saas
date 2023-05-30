@@ -45,7 +45,7 @@ func Parse(reader io.Reader, params *ParseParams) ([]Template, error) {
 		for _, template := range c.Templates {
 			if err := template.Validate(); err != nil {
 				if params.DisallowInvalidTemplates {
-					return nil, err
+					return nil, errors.Wrapf(err, "failed to validate template %s", template.Name)
 				}
 
 				continue // skip invalid template
@@ -104,7 +104,7 @@ func (r *Template) validateParams() error {
 	var err error
 	for _, param := range r.Params {
 		if err = param.Validate(); err != nil {
-			return err
+			return errors.Wrapf(err, "parameter '%s' is invalid", param.Name)
 		}
 	}
 

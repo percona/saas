@@ -24,5 +24,5 @@ func (u Unit) Validate() error {
 
 	// do not add `default:` to make exhaustive linter do its job
 
-	return errors.Errorf("unhandled parameter unit %s", string(u))
+	return errors.Errorf("unhandled parameter unit '%s'", string(u))
 }

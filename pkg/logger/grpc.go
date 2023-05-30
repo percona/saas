@@ -22,7 +22,7 @@ type GRPC struct {
 }
 
 // V reports whether verbosity level l is at least the requested verbose level.
-func (g *GRPC) V(l int) bool {
+func (g *GRPC) V(_ int) bool {
 	return g.Verbose
 }
 
