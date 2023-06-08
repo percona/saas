@@ -9,6 +9,7 @@ import (
 
 	proto "github.com/golang/protobuf/proto"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
+	github_com_mwitkow_go_proto_validators "github.com/mwitkow/go-proto-validators"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 )
 
@@ -33,5 +34,35 @@ func (this *GetAllAlertRuleTemplatesRequest) Validate() error {
 	return nil
 }
 func (this *GetAllAlertRuleTemplatesResponse) Validate() error {
+	return nil
+}
+func (this *GetAdvisorsInfoRequest) Validate() error {
+	return nil
+}
+func (this *GetAdvisorsInfoResponse) Validate() error {
+	// Validation of proto3 map<> fields is unsupported.
+	return nil
+}
+func (this *Advisors) Validate() error {
+	for _, item := range this.Advisors {
+		if item != nil {
+			if err := github_com_mwitkow_go_proto_validators.CallValidatorIfExists(item); err != nil {
+				return github_com_mwitkow_go_proto_validators.FieldError("Advisors", err)
+			}
+		}
+	}
+	return nil
+}
+func (this *AdvisorInfo) Validate() error {
+	for _, item := range this.Checks {
+		if item != nil {
+			if err := github_com_mwitkow_go_proto_validators.CallValidatorIfExists(item); err != nil {
+				return github_com_mwitkow_go_proto_validators.FieldError("Checks", err)
+			}
+		}
+	}
+	return nil
+}
+func (this *CheckInfo) Validate() error {
 	return nil
 }
