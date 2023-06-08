@@ -107,11 +107,7 @@ func (p *Parameter) Validate() error {
 		return err
 	}
 
-	if err = p.validateRange(); err != nil {
-		return err
-	}
-
-	return nil
+	return p.validateRange()
 }
 
 func (p *Parameter) validateValue() error {
