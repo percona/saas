@@ -8,7 +8,7 @@ require (
 	github.com/golang/protobuf v1.5.3
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.16.0
 	github.com/mwitkow/go-proto-validators v0.3.2
-	github.com/percona/promconfig v0.2.1
+	github.com/percona/promconfig v0.2.5
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.11.1
 	go.starlark.net v0.0.0-20201210151846-e81fc95f7bd5
