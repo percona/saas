@@ -13,7 +13,7 @@ require (
 	github.com/prometheus/client_golang v1.15.1
 	go.starlark.net v0.0.0-20201210151846-e81fc95f7bd5
 	go.uber.org/zap v1.24.0
-	golang.org/x/crypto v0.1.0
+	golang.org/x/crypto v0.9.0
 	google.golang.org/genproto v0.0.0-20230526203410-71b5a4ffd15e
 	google.golang.org/grpc v1.55.0
 	google.golang.org/protobuf v1.30.0
