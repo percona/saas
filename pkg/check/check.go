@@ -147,36 +147,26 @@ const (
 type Type string
 
 // Validate validates query type.
-func (t Type) Validate() error { //nolint:cyclop
+func (t Type) Validate() error {
 	switch t {
-	case MySQLShow:
-		fallthrough
-	case MySQLSelect:
-		fallthrough
-	case PostgreSQLShow:
-		fallthrough
-	case PostgreSQLSelect:
-		fallthrough
-	case MongoDBGetParameter:
-		fallthrough
-	case MongoDBBuildInfo:
-		fallthrough
-	case MongoDBGetCmdLineOpts:
-		fallthrough
-	case MongoDBReplSetGetStatus:
-		fallthrough
-	case MongoDBGetDiagnosticData:
-		fallthrough
-	case ClickHouseSelect:
-		fallthrough
-	case MetricsInstant:
-		fallthrough
-	case MetricsRange:
+	case MySQLShow, MySQLSelect, PostgreSQLShow, PostgreSQLSelect,
+		MongoDBGetParameter, MongoDBBuildInfo, MongoDBGetCmdLineOpts, MongoDBReplSetGetStatus,
+		MongoDBGetDiagnosticData, ClickHouseSelect, MetricsInstant, MetricsRange:
 		return nil
 	case "":
 		return errors.New("check type is empty")
 	default:
 		return errors.Errorf("unknown check type: %s", t)
+	}
+}
+
+func isTypeSupportedByV1(t Type) bool {
+	switch t { //nolint:exhaustive
+	case MySQLShow, MySQLSelect, PostgreSQLShow, PostgreSQLSelect, MongoDBGetParameter,
+		MongoDBBuildInfo, MongoDBGetCmdLineOpts, MongoDBReplSetGetStatus, MongoDBGetDiagnosticData:
+		return true
+	default:
+		return false
 	}
 }
 
@@ -250,6 +240,19 @@ type Query struct {
 	Parameters map[Parameter]string
 }
 
+// Validate validates query.
+func (q Query) Validate() error {
+	if err := q.Type.Validate(); err != nil {
+		return err
+	}
+
+	if err := validateQuery(q.Type, q.Query); err != nil {
+		return err
+	}
+
+	return validateQueryParameters(q.Type, q.Parameters)
+}
+
 // Check represents advisor check structure. Fields marked with v1 should not be used for version 2, and vice versa.
 type Check struct {
 	Version     uint32   `yaml:"version"`
@@ -259,7 +262,7 @@ type Check struct {
 	Advisor     string   `yaml:"advisor"`
 	Category    string   `yaml:"category,omitempty"` // deprecated
 	Type        Type     `yaml:"type,omitempty"`     // for v1
-	Family      Family   `yaml:"family,omitempty"`   // for v2
+	Family      Family   `yaml:"family,omitempty"`   // for v2, emulated via GetFamily for v1
 	Interval    Interval `yaml:"interval,omitempty"`
 	Query       string   `yaml:"query,omitempty"`   // for v1
 	Queries     []Query  `yaml:"queries,omitempty"` // for v2
@@ -271,26 +274,18 @@ func (c *Check) GetFamily() Family {
 	switch c.Version {
 	case 1:
 		switch c.Type {
-		case MySQLSelect:
-			fallthrough
-		case MySQLShow:
+		case MySQLSelect, MySQLShow:
 			return MySQL
 
-		case PostgreSQLSelect:
-			fallthrough
-		case PostgreSQLShow:
+		case PostgreSQLSelect, PostgreSQLShow:
 			return PostgreSQL
 
-		case MongoDBGetParameter:
-			fallthrough
-		case MongoDBBuildInfo:
-			fallthrough
-		case MongoDBGetCmdLineOpts:
-			fallthrough
-		case MongoDBReplSetGetStatus:
-			fallthrough
-		case MongoDBGetDiagnosticData:
+		case MongoDBGetParameter, MongoDBBuildInfo, MongoDBGetCmdLineOpts,
+			MongoDBReplSetGetStatus, MongoDBGetDiagnosticData:
 			return MongoDB
+
+		case MetricsInstant, MetricsRange, ClickHouseSelect:
+			return "" // Unsupported query types for V1, check is invalid
 		}
 	case 2:
 		return c.Family
@@ -347,6 +342,10 @@ func (c *Check) validateV1() error {
 		return err
 	}
 
+	if !isTypeSupportedByV1(c.Type) {
+		return errors.Errorf("check type '%s' is not supprted in V1", c.Type)
+	}
+
 	if err = validateQuery(c.Type, c.Query); err != nil {
 		return err
 	}
@@ -391,33 +390,15 @@ func (c *Check) validateScript() error {
 	return nil
 }
 
-func validateQuery(typ Type, query string) error { //nolint:cyclop
+func validateQuery(typ Type, query string) error {
 	switch typ {
-	case PostgreSQLShow:
-		fallthrough
-	case MongoDBGetParameter:
-		fallthrough
-	case MongoDBBuildInfo:
-		fallthrough
-	case MongoDBGetCmdLineOpts:
-		fallthrough
-	case MongoDBReplSetGetStatus:
-		fallthrough
-	case MongoDBGetDiagnosticData:
+	case PostgreSQLShow, MongoDBGetParameter, MongoDBBuildInfo, MongoDBGetCmdLineOpts,
+		MongoDBReplSetGetStatus, MongoDBGetDiagnosticData:
 		if query != "" {
 			return errors.Errorf("query should be empty for '%s' type", typ)
 		}
-	case PostgreSQLSelect:
-		fallthrough
-	case MySQLShow:
-		fallthrough
-	case MySQLSelect:
-		fallthrough
-	case ClickHouseSelect:
-		fallthrough
-	case MetricsInstant:
-		fallthrough
-	case MetricsRange:
+	case PostgreSQLSelect, MySQLShow, MySQLSelect, ClickHouseSelect,
+		MetricsInstant, MetricsRange:
 		if query == "" {
 			return errors.New("query is empty")
 		}
@@ -426,23 +407,10 @@ func validateQuery(typ Type, query string) error { //nolint:cyclop
 	return nil
 }
 
-func validateQueryParameters(typ Type, params map[Parameter]string) error { //nolint:cyclop
+func validateQueryParameters(typ Type, params map[Parameter]string) error {
 	switch typ { //nolint:exhaustive
-	case PostgreSQLShow:
-		fallthrough
-	case MongoDBGetParameter:
-		fallthrough
-	case MongoDBBuildInfo:
-		fallthrough
-	case MongoDBGetCmdLineOpts:
-		fallthrough
-	case MongoDBReplSetGetStatus:
-		fallthrough
-	case MongoDBGetDiagnosticData:
-		fallthrough
-	case MySQLShow:
-		fallthrough
-	case MySQLSelect:
+	case PostgreSQLShow, MongoDBGetParameter, MongoDBBuildInfo, MongoDBGetCmdLineOpts,
+		MongoDBReplSetGetStatus, MongoDBGetDiagnosticData, MySQLShow, MySQLSelect:
 		if len(params) != 0 {
 			return errors.Errorf("query for '%s' type should not have any parameters", typ)
 		}
@@ -517,15 +485,7 @@ func (c *Check) validateQueries() error {
 
 	var err error
 	for _, q := range c.Queries {
-		if err = q.Type.Validate(); err != nil {
-			return err
-		}
-
-		if err = validateQuery(q.Type, q.Query); err != nil {
-			return err
-		}
-
-		if err = validateQueryParameters(q.Type, q.Parameters); err != nil {
+		if err = q.Validate(); err != nil {
 			return err
 		}
 	}
