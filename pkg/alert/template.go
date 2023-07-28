@@ -56,8 +56,8 @@ func Parse(reader io.Reader, params *ParseParams) ([]Template, error) {
 	}
 }
 
-// ToString returns YAML representation of given templates.
-func ToString(ts []Template) (string, error) {
+// ToYAML returns YAML representation of given templates.
+func ToYAML(ts []Template) (string, error) {
 	b, err := yaml.Marshal(&templates{Templates: ts})
 	if err != nil {
 		return "", errors.Wrap(err, "failed to marshal templates to YAML")

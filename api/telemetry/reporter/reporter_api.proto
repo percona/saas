@@ -13,7 +13,10 @@ import "utils/fsp/fsp.proto";
 
 option go_package = "/telemetry/reporter;reporterv1";
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
-  info: {title: "Reporter API"};
+  info: {
+    title: "Telemetry reporter API",
+    description: "API for telemetryd service.",
+  };
   extensions: {
     key: "x-readme";
     value: {

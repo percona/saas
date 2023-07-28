@@ -4,8 +4,15 @@ package percona.platform.telemetry.reporter.v1;
 
 import "github.com/mwitkow/go-proto-validators/validator.proto";
 import "google/protobuf/timestamp.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "/telemetry/reporter;reporterv1";
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Telemetry reporter events API",
+    description: "API describing serialized events received by telemetryd.",
+  };
+};
 
 // AnyEvent represents a serialized telemetry event from the events sub-packages.
 // It is similar to any.Any, but:
