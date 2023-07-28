@@ -25,5 +25,5 @@ func (t Type) Validate() error {
 
 	// do not add `default:` to make exhaustive linter do its job
 
-	return errors.Errorf("unhandled parameter type %s", string(t))
+	return errors.Errorf("unhandled parameter type '%s'", t)
 }

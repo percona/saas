@@ -11,6 +11,10 @@ import (
 	"github.com/percona-platform/saas/pkg/common"
 )
 
+type templates struct {
+	Templates []Template `yaml:"templates"`
+}
+
 // ParseParams represents optional Parse function parameters.
 type ParseParams struct {
 	DisallowUnknownFields    bool // if true, return errors for unexpected YAML fields
@@ -28,10 +32,6 @@ func Parse(reader io.Reader, params *ParseParams) ([]Template, error) {
 	d := yaml.NewDecoder(reader)
 	d.KnownFields(params.DisallowUnknownFields)
 
-	type templates struct {
-		Templates []Template `yaml:"templates"`
-	}
-
 	var res []Template
 	for {
 		var c templates
@@ -45,7 +45,7 @@ func Parse(reader io.Reader, params *ParseParams) ([]Template, error) {
 		for _, template := range c.Templates {
 			if err := template.Validate(); err != nil {
 				if params.DisallowInvalidTemplates {
-					return nil, err
+					return nil, errors.Wrapf(err, "failed to validate template '%s'", template.Name)
 				}
 
 				continue // skip invalid template
@@ -54,6 +54,16 @@ func Parse(reader io.Reader, params *ParseParams) ([]Template, error) {
 			res = append(res, template)
 		}
 	}
+}
+
+// ToYAML returns YAML representation of given templates.
+func ToYAML(ts []Template) (string, error) {
+	b, err := yaml.Marshal(&templates{Templates: ts})
+	if err != nil {
+		return "", errors.Wrap(err, "failed to marshal templates to YAML")
+	}
+
+	return string(b), nil
 }
 
 // Template represents Integrated Alerting rule template.
@@ -104,7 +114,7 @@ func (r *Template) validateParams() error {
 	var err error
 	for _, param := range r.Params {
 		if err = param.Validate(); err != nil {
-			return err
+			return errors.Wrapf(err, "parameter '%s' is invalid", param.Name)
 		}
 	}
 

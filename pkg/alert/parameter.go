@@ -138,27 +138,21 @@ func (p *Parameter) validateRange() error {
 	}
 
 	switch p.Type {
-	case Bool:
+	case Bool, String:
 		if len(p.Range) != 0 {
-			return errors.Errorf("range should be empty, but has %d elements", len(p.Range))
+			return errors.Errorf("range should be empty, but it has %d elements", len(p.Range))
 		}
 		return nil
 
 	case Float:
 		if len(p.Range) != 2 {
-			return errors.Errorf("range should be empty or have two elements, but has %d", len(p.Range))
+			return errors.Errorf("range should be empty or have two elements, but it has %d elements", len(p.Range))
 		}
 		if _, err := castValueToFloat64(p.Range[0]); err != nil {
 			return errors.Wrapf(err, "invalid lower element of range")
 		}
 		if _, err := castValueToFloat64(p.Range[1]); err != nil {
 			return errors.Errorf("invalid higher element of range")
-		}
-		return nil
-
-	case String:
-		if len(p.Range) != 0 {
-			return errors.Errorf("range should be empty, but has %d elements", len(p.Range))
 		}
 		return nil
 	}
