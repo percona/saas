@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/pkg/errors"
-	"go.starlark.net/resolve"
 	"go.starlark.net/starlark"
 
 	"github.com/percona-platform/saas/pkg/check"
@@ -295,12 +294,4 @@ func CheckGlobals(c *check.Check, predeclaredFuncs map[string]GoFunc) error {
 		return fmt.Errorf("%s: no `check_context` function found", c.Name)
 	}
 	return nil
-}
-
-// modify unavoidable global state once on package initialization to avoid race conditions
-//
-//nolint:gochecknoinits
-func init() {
-	resolve.AllowFloat = true
-	resolve.AllowSet = true
 }
