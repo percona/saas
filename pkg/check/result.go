@@ -5,7 +5,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/percona-platform/saas/pkg/common"
+	"github.com/percona/saas/pkg/common"
 )
 
 // Result represents a single check script result that is used to generate alert.
