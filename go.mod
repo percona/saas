@@ -1,8 +1,8 @@
-module github.com/percona-platform/saas
+module github.com/percona/saas
 
 go 1.21
 
-replace github.com/percona-platform/platform => ../should-not-exist
+replace github.com/percona/platform => ../should-not-exist
 
 require (
 	github.com/golang/protobuf v1.5.4

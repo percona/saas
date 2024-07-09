@@ -8,7 +8,7 @@ import (
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v3"
 
-	"github.com/percona-platform/saas/pkg/common"
+	"github.com/percona/saas/pkg/common"
 )
 
 type templates struct {

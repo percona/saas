@@ -18,8 +18,8 @@ import (
 	_ "google.golang.org/protobuf/types/known/durationpb"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 
-	pmm "github.com/percona-platform/saas/gen/telemetry/events/pmm"
-	fsp "github.com/percona-platform/saas/gen/utils/fsp"
+	pmm "github.com/percona/saas/gen/telemetry/events/pmm"
+	fsp "github.com/percona/saas/gen/utils/fsp"
 )
 
 const (
