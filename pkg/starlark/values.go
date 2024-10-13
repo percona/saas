@@ -140,7 +140,7 @@ func starlarkToGo(v starlark.Value) (interface{}, error) { //nolint:funlen, cycl
 
 	case *starlark.List:
 		res := make([]interface{}, v.Len())
-		for i := 0; i < v.Len(); i++ {
+		for i := range v.Len() {
 			gv, err := starlarkToGo(v.Index(i))
 			if err != nil {
 				return nil, err

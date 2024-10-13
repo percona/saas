@@ -38,7 +38,7 @@ func ParseAdvisors(reader io.Reader, params *ParseParams) ([]Advisor, error) {
 	var res []Advisor
 	for {
 		var c advisors
-		if err := d.Decode(&c); err != nil {
+		if err := d.Decode(&c); err != nil { //nolint:musttag
 			if errors.Is(err, io.EOF) {
 				return res, nil
 			}
