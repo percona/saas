@@ -14,11 +14,11 @@ import "utils/fsp/fsp.proto";
 option go_package = "/telemetry/reporter;reporterv1";
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
-    title: "Telemetry reporter API",
-    description: "API for telemetryd service.",
-  };
+    title: "Telemetry reporter API"
+    description: "API for telemetryd service."
+  }
   extensions: {
-    key: "x-readme";
+    key: "x-readme"
     value: {
       struct_value: {
         fields: {
@@ -46,19 +46,19 @@ service ReporterAPI {
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      description: "Report is used to submit telemetry events to telemetryd service.";
-      summary: "Report";
-      consumes: ["application/json"];
-      produces: ["application/json"];
+      description: "Report is used to submit telemetry events to telemetryd service."
+      summary: "Report"
+      consumes: ["application/json"]
+      produces: ["application/json"]
       responses: {
-        key: "200";
+        key: "200"
         value: {
           examples: {
             key: "application/json"
             value: '{}'
           }
-        };
-      };
+        }
+      }
     };
   }
 
@@ -70,10 +70,10 @@ service ReporterAPI {
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      description: "SearchEvent searches for a specific metric in telemetry events and returns them to the client.";
-      summary: "SearchEvent";
-      consumes: ["application/json"];
-      produces: ["application/json"];
+      description: "SearchEvent searches for a specific metric in telemetry events and returns them to the client."
+      summary: "SearchEvent"
+      consumes: ["application/json"]
+      produces: ["application/json"]
     };
   }
 }
