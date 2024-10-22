@@ -22,8 +22,8 @@ var nameRE = regexp.MustCompile(`^[a-zA-Z_][a-zA-Z0-9_]*$`)
 // Verify checks signature of passed data with provided public key and
 // returns error in case of any problem.
 func Verify(data []byte, publicKey, sig string) error { //nolint: cyclop
-	lines := strings.SplitN(sig, "\n", 4)
-	if len(lines) < 4 {
+	lines := strings.SplitN(sig, "\n", 4) //nolint:mnd
+	if len(lines) < 4 {                   //nolint:mnd
 		return errors.New("incomplete signature")
 	}
 
@@ -35,13 +35,13 @@ func Verify(data []byte, publicKey, sig string) error { //nolint: cyclop
 	if err != nil || len(gBin) != 64 {
 		return errors.New("invalid global signature")
 	}
-	kBin, err := base64.StdEncoding.DecodeString(publicKey) //nolint:revive
+	kBin, err := base64.StdEncoding.DecodeString(publicKey)
 	if err != nil || len(kBin) != 42 {
 		return errors.New("invalid public key")
 	}
 
 	sAlg, sKeyID, sSig := sBin[0:2], sBin[2:10], sBin[10:74]
-	kAlg, kKeyID, kKey := kBin[0:2], kBin[2:10], kBin[10:42] //nolint:revive
+	kAlg, kKeyID, kKey := kBin[0:2], kBin[2:10], kBin[10:42]
 
 	// Key algorithm should be `Ed`.
 	if kAlg[0] != 0x45 || kAlg[1] != 0x64 {
@@ -53,7 +53,7 @@ func Verify(data []byte, publicKey, sig string) error { //nolint: cyclop
 	}
 
 	// For pre-hashed signature get data hash.
-	if sAlg[1] == 0x44 {
+	if sAlg[1] == 0x44 { //nolint:mnd
 		h, _ := blake2b.New512(nil)
 		h.Write(data)
 		data = h.Sum(nil)
@@ -106,7 +106,7 @@ func ParseChecks(reader io.Reader, params *ParseParams) ([]Check, error) {
 	var res []Check
 	for {
 		var c checks
-		if err := d.Decode(&c); err != nil {
+		if err := d.Decode(&c); err != nil { //nolint:musttag
 			if errors.Is(err, io.EOF) {
 				return res, nil
 			}
@@ -287,7 +287,7 @@ func (c *Check) GetFamily() Family {
 		case MetricsInstant, MetricsRange, ClickHouseSelect:
 			return "" // Unsupported query types for V1, check is invalid
 		}
-	case 2:
+	case 2: //nolint:mnd
 		return c.Family
 	}
 
@@ -329,7 +329,7 @@ func (c *Check) Validate() error { //nolint: cyclop
 	switch c.Version {
 	case 1:
 		return c.validateV1()
-	case 2:
+	case 2: //nolint:mnd
 		return c.validateV2()
 	default:
 		return errors.Errorf("unexpected version %d", c.Version)

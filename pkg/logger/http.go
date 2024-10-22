@@ -68,7 +68,7 @@ func (rt *roundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 				rl.Debug(fmt.Sprintf("Received response:\n%s", b))
 			}
 		} else {
-			rl.Info(fmt.Sprintf("Received response: %s", resp.Status))
+			rl.Info("Received response: " + resp.Status)
 		}
 	}
 	return resp, err
