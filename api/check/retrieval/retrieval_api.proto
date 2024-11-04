@@ -8,11 +8,11 @@ import "protoc-gen-openapiv2/options/annotations.proto";
 option go_package = "/check/retrieval;retrievalv1";
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
-    title: "Check Retrieval API",
-    description: "API for checked service.",
-  };
+    title: "Check Retrieval API"
+    description: "API for checked service."
+  }
   extensions: {
-    key: "x-readme";
+    key: "x-readme"
     value: {
       struct_value: {
         fields: {
@@ -41,10 +41,10 @@ service RetrievalAPI {
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      description: "Retrieves all check scripts a user is entitled to according to the tier.";
-      summary: "Get all checks";
-      consumes: ["application/json"];
-      produces: ["application/json"];
+      description: "Retrieves all check scripts a user is entitled to according to the tier."
+      summary: "Get all checks"
+      consumes: ["application/json"]
+      produces: ["application/json"]
     };
   }
   // GetAllAdvisors returns all available advisors.
@@ -54,10 +54,10 @@ service RetrievalAPI {
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      description: "Retrieves all advisors a user is entitled to according to the tier.";
-      summary: "Get all advisors";
-      consumes: ["application/json"];
-      produces: ["application/json"];
+      description: "Retrieves all advisors a user is entitled to according to the tier."
+      summary: "Get all advisors"
+      consumes: ["application/json"]
+      produces: ["application/json"]
     };
   }
   // GetAllAlertRuleTemplates returns all available alert rule templates.
@@ -67,10 +67,10 @@ service RetrievalAPI {
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      description: "Retrieves all alert rule templates a user is entitled to according to the tier.";
-      summary: "Get all alert rule templates";
-      consumes: ["application/json"];
-      produces: ["application/json"];
+      description: "Retrieves all alert rule templates a user is entitled to according to the tier."
+      summary: "Get all alert rule templates"
+      consumes: ["application/json"]
+      produces: ["application/json"]
     };
   }
   // GetAdvisorsInfo returns all available advisors information grouped by tiers.
@@ -78,10 +78,10 @@ service RetrievalAPI {
   rpc GetAdvisorsInfo(GetAdvisorsInfoRequest) returns (GetAdvisorsInfoResponse) {
     option (google.api.http) = {get: "/v1/check/advisors"};
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      description: "Retrieves info about advisors. If `limit_by_tier` parameter is set result will contain info only about advisors a user is entitled to according to the tier.";
-      summary: "Get all advisors info";
-      consumes: ["application/json"];
-      produces: ["application/json"];
+      description: "Retrieves info about advisors. If `limit_by_tier` parameter is set result will contain info only about advisors a user is entitled to according to the tier."
+      summary: "Get all advisors info"
+      consumes: ["application/json"]
+      produces: ["application/json"]
     };
   }
 }
