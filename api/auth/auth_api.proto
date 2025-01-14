@@ -10,11 +10,11 @@ import "protoc-gen-openapiv2/options/annotations.proto";
 option go_package = "/auth;authv1";
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
-    title: "Auth API",
-    description: "API for authed service.",
-  };
+    title: "Auth API"
+    description: "API for authed service."
+  }
   extensions: {
-    key: "x-readme";
+    key: "x-readme"
     value: {
       struct_value: {
         fields: {
@@ -42,10 +42,10 @@ service AuthAPI {
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      description: "SignUp creates new user with given email and password.";
-      summary: "SignUp";
-      consumes: ["application/json"];
-      produces: ["application/json"];
+      description: "SignUp creates new user with given email and password."
+      summary: "SignUp"
+      consumes: ["application/json"]
+      produces: ["application/json"]
     };
   }
   // SignIn checks user authentication, creates session and returns session ID.
@@ -55,10 +55,10 @@ service AuthAPI {
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      description: "SignIn checks user authentication, creates session and returns session ID.";
-      summary: "SignIn";
-      consumes: ["application/json"];
-      produces: ["application/json"];
+      description: "SignIn checks user authentication, creates session and returns session ID."
+      summary: "SignIn"
+      consumes: ["application/json"]
+      produces: ["application/json"]
     };
   }
   // SignOut terminates user session.
@@ -68,10 +68,10 @@ service AuthAPI {
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      description: "SignOut terminates user session.";
-      summary: "SignOut";
-      consumes: ["application/json"];
-      produces: ["application/json"];
+      description: "SignOut terminates user session."
+      summary: "SignOut"
+      consumes: ["application/json"]
+      produces: ["application/json"]
     };
   }
   // RefreshSession refreshes session timeout.
@@ -81,10 +81,10 @@ service AuthAPI {
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      description: "RefreshSession refreshes session timeout.";
-      summary: "RefreshSession";
-      consumes: ["application/json"];
-      produces: ["application/json"];
+      description: "RefreshSession refreshes session timeout."
+      summary: "RefreshSession"
+      consumes: ["application/json"]
+      produces: ["application/json"]
     };
   }
   // ResetPassword initiates user's password reset procedure.
@@ -94,10 +94,10 @@ service AuthAPI {
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      description: "ResetPassword initiates user's password reset procedure.";
-      summary: "ResetPassword";
-      consumes: ["application/json"];
-      produces: ["application/json"];
+      description: "ResetPassword initiates user's password reset procedure."
+      summary: "ResetPassword"
+      consumes: ["application/json"]
+      produces: ["application/json"]
     };
   }
   // GetProfile returns user's email, name and some additional information.
@@ -107,10 +107,10 @@ service AuthAPI {
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      description: "GetProfile returns user's email, name and some additional information.";
-      summary: "GetProfile";
-      consumes: ["application/json"];
-      produces: ["application/json"];
+      description: "GetProfile returns user's email, name and some additional information."
+      summary: "GetProfile"
+      consumes: ["application/json"]
+      produces: ["application/json"]
     };
   }
   // SearchUserProfile returns the requested user's profile data.
@@ -120,10 +120,10 @@ service AuthAPI {
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      description: "SearchUserProfile returns the requested user's profile data.";
-      summary: "SearchUserProfile";
-      consumes: ["application/json"];
-      produces: ["application/json"];
+      description: "SearchUserProfile returns the requested user's profile data."
+      summary: "SearchUserProfile"
+      consumes: ["application/json"]
+      produces: ["application/json"]
     };
   }
   // UpdateProfile updates user's first name and last name.
@@ -133,10 +133,10 @@ service AuthAPI {
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      description: "UpdateProfile updates user's first name and last name.";
-      summary: "UpdateProfile";
-      consumes: ["application/json"];
-      produces: ["application/json"];
+      description: "UpdateProfile updates user's first name and last name."
+      summary: "UpdateProfile"
+      consumes: ["application/json"]
+      produces: ["application/json"]
     };
   }
 
@@ -147,10 +147,10 @@ service AuthAPI {
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      description: "ActivateProfile activates user account.";
-      summary: "ActivateProfile";
-      consumes: ["application/json"];
-      produces: ["application/json"];
+      description: "ActivateProfile activates user account."
+      summary: "ActivateProfile"
+      consumes: ["application/json"]
+      produces: ["application/json"]
     };
   }
 
@@ -161,10 +161,10 @@ service AuthAPI {
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      description: "Validates a one-time activationToken and returns 5-min living stateToken";
-      summary: "ValidateToken";
-      consumes: ["application/json"];
-      produces: ["application/json"];
+      description: "Validates a one-time activationToken and returns 5-min living stateToken"
+      summary: "ValidateToken"
+      consumes: ["application/json"]
+      produces: ["application/json"]
     };
   }
 }

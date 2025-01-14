@@ -145,7 +145,7 @@ func (p *Parameter) validateRange() error {
 		return nil
 
 	case Float:
-		if len(p.Range) != 2 {
+		if len(p.Range) != 2 { //nolint:mnd
 			return errors.Errorf("range should be empty or have two elements, but it has %d elements", len(p.Range))
 		}
 		if _, err := castValueToFloat64(p.Range[0]); err != nil {
