@@ -1,6 +1,6 @@
 module github.com/percona/saas
 
-go 1.23
+go 1.23.0
 
 replace github.com/percona/platform => ../should-not-exist
 
@@ -13,7 +13,7 @@ require (
 	github.com/prometheus/client_golang v1.19.1
 	go.starlark.net v0.0.0-20201210151846-e81fc95f7bd5
 	go.uber.org/zap v1.27.0
-	golang.org/x/crypto v0.28.0
+	golang.org/x/crypto v0.39.0
 	google.golang.org/grpc v1.67.0
 	google.golang.org/protobuf v1.34.2
 	gopkg.in/yaml.v3 v3.0.1
@@ -28,8 +28,8 @@ require (
 	github.com/stretchr/testify v1.8.3 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
 	golang.org/x/net v0.28.0 // indirect
-	golang.org/x/sys v0.26.0 // indirect
-	golang.org/x/text v0.19.0 // indirect
+	golang.org/x/sys v0.33.0 // indirect
+	golang.org/x/text v0.26.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240814211410-ddb44dafa142 // indirect
 )
 
