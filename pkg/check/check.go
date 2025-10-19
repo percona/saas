@@ -267,6 +267,7 @@ type Check struct {
 	Query       string   `yaml:"query,omitempty"`   // for v1
 	Queries     []Query  `yaml:"queries,omitempty"` // for v2
 	Script      string   `yaml:"script"`
+	Debug       bool     `yaml:"debug,omitempty"` // optional, specifies whether to enable debug mode
 }
 
 // GetFamily returns check family for both V1 and V2 check formats.
