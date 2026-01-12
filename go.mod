@@ -1,6 +1,6 @@
 module github.com/percona/saas
 
-go 1.24.0
+go 1.24.9
 
 replace github.com/percona/platform => ../should-not-exist
 
@@ -8,7 +8,7 @@ require (
 	github.com/golang/protobuf v1.5.4
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.4
 	github.com/mwitkow/go-proto-validators v0.3.2
-	github.com/percona/promconfig v0.2.5
+	github.com/percona/promconfig v0.3.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.23.2
 	go.starlark.net v0.0.0-20201210151846-e81fc95f7bd5
