@@ -12,7 +12,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.23.2
 	go.starlark.net v0.0.0-20201210151846-e81fc95f7bd5
-	go.uber.org/zap v1.27.0
+	go.uber.org/zap v1.27.1
 	golang.org/x/crypto v0.46.0
 	google.golang.org/grpc v1.78.0
 	google.golang.org/protobuf v1.36.11
