@@ -6,7 +6,7 @@ replace github.com/percona/platform => ../should-not-exist
 
 require (
 	github.com/golang/protobuf v1.5.4
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.4
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.7
 	github.com/mwitkow/go-proto-validators v0.3.2
 	github.com/percona/promconfig v0.2.5
 	github.com/pkg/errors v0.9.1
@@ -29,11 +29,11 @@ require (
 	go.uber.org/multierr v1.10.0 // indirect
 	golang.org/x/net v0.48.0 // indirect
 	golang.org/x/sys v0.39.0 // indirect
-	golang.org/x/text v0.32.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20251222181119-0a764e51fe1b // indirect
+	golang.org/x/text v0.33.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260128011058-8636f8732409 // indirect
 )
 
 require (
 	github.com/gogo/protobuf v1.3.2 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20251222181119-0a764e51fe1b
+	google.golang.org/genproto/googleapis/api v0.0.0-20260128011058-8636f8732409
 )
