@@ -1,6 +1,6 @@
 module github.com/percona/saas
 
-go 1.24.0
+go 1.25.0
 
 replace github.com/percona/platform => ../should-not-exist
 
@@ -10,7 +10,7 @@ require (
 	github.com/mwitkow/go-proto-validators v0.3.2
 	github.com/prometheus/client_golang v1.23.2
 	go.uber.org/zap v1.27.0
-	google.golang.org/grpc v1.78.0
+	google.golang.org/grpc v1.81.0
 	google.golang.org/protobuf v1.36.11
 )
 
@@ -23,13 +23,13 @@ require (
 	github.com/prometheus/procfs v0.16.1 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
 	go.yaml.in/yaml/v2 v2.4.2 // indirect
-	golang.org/x/net v0.48.0 // indirect
-	golang.org/x/sys v0.39.0 // indirect
-	golang.org/x/text v0.32.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20251222181119-0a764e51fe1b // indirect
+	golang.org/x/net v0.51.0 // indirect
+	golang.org/x/sys v0.42.0 // indirect
+	golang.org/x/text v0.34.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260226221140-a57be14db171 // indirect
 )
 
 require (
 	github.com/gogo/protobuf v1.3.2 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20251222181119-0a764e51fe1b
+	google.golang.org/genproto/googleapis/api v0.0.0-20260226221140-a57be14db171
 )
